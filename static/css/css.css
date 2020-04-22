@@ -93,12 +93,12 @@ body{
   transition: 0.3s;
 }
 .guide_image_container_1, .guide_image_container_2, .guide_image_container_3,.guide_image_container_4, .guide_image_container_5, .guide_image_container_6{
-  width: 30%;
-  border: 1px solid black;
+  width: 28vw;
+  border: 0.1vw solid black;
   float: left;
-  padding: 10px;
-  margin-left: 2%;
-  margin-top: 3%;
+  padding: 1vw;
+  margin-left: 2vw;
+  margin-top: 3vw;
 }
 
 .writing_test,.writing_test_2,.writing_test_3,.writing_test_4,.writing_test_5,.writing_test_6{
@@ -147,10 +147,17 @@ body{
   opacity: 0.5;
 }
 
+.guide_content_container{
+  text-align: center;
+
+}
+
+
 .one, .two, .three, .four, .five, .six{
   height:100%;
-  width:100%;
+  width: 100%;
   float: left;
+
 }
 
 
