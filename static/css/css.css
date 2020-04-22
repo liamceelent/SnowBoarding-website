@@ -13,15 +13,18 @@ body{
   margin:0px;
 }
 
+p {
+  margin: 0px;
+}
 .menu{
-  padding: 1vw;
-  width: 10vw;
+  padding: 10px;
+  width: 3vw;
   float: left;
 }
 
 .menu_btn{
-  font-size: 2vw;
-  padding: .74vw;
+  font-size: 20px;
+  padding: 10px;
   background-color: #004e74;
   border-width: 0;
   color: #a86d4f;
@@ -59,7 +62,7 @@ body{
   background-color: white;
 }
 
-.backgroundimg{
+.homeimg_desktop{
   background-image: url("/static/image/test_2.jpg");
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -67,16 +70,108 @@ body{
   height: 100%;
   background-size: cover;
   background-position: center;
+  display: none;
 }
 
-.home_text p{
+.home_text_desktop p{
     padding-top: 10%;
     padding-left: 6%;
     font-size: 4.5vw;
     -webkit-animation: fadein 4s;
     width: 60vw;
     font-family: 'Baloo Bhaina 2';
+    display: none;
 }
+
+.home_text_ipad {
+  display: none;
+  height:40%;
+  font-size: 80px;
+  padding-top: 10%;
+}
+
+.homeimg_ipad{
+  display: none;
+  background-image: url("/static/image/done.png");
+  width: 100%;
+  height: 50%;
+  background-repeat: no-repeat;
+  background-position:center;
+  background-size: cover;
+}
+
+
+.home_text_phone{
+  display: block;
+  height: 40%;
+  font-size: 30px;
+  padding-top: 10%;
+}
+
+.img_phone{
+  display: block;
+  background-image: url("/static/image/guide_img1.jpg");
+  width: 100%;
+  height: 70%;
+  background-repeat: no-repeat;
+  background-position:center;
+  background-size: cover;
+}
+
+@media only screen and (min-width: 768px) {
+
+  .home_text_phone{
+    display: none;
+  }
+  .img_phone{
+    display: none;
+  }
+
+  .home_text_ipad{
+    display: block;
+  }
+
+  .homeimg_ipad{
+    display: block;
+  }
+
+  .homeimg_desktop{
+    display: none;
+  }
+
+  .home_text_desktop p{
+    display: none;
+  }
+
+}
+
+@media only screen and (min-width: 1000px) {
+
+  .home_text_phone{
+    display: none;
+  }
+  .img_phone{
+    display: none;
+  }
+
+  .home_text_ipad{
+    display: none;
+  }
+
+  .homeimg_ipad{
+    display: none;
+  }
+
+  .homeimg_desktop{
+    display: block;
+  }
+
+  .home_text_desktop p{
+    display: block;
+  }
+
+}
+
 
 .title_guide{
   text-align: center;
