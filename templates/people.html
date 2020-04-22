@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class = "people_title">
+  <h1> famous snowbaorders</h1>
+</div>
+
+
+{% for post in posts %}
+
+<div class = "people_container">
+  <div class = "people_post">
+    <h1> this post was made at {{post[1]}} by x</h1>
+    <p> description {{post[2]}} </p>
+    <li> {{post[3]}}</li>
+  </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
