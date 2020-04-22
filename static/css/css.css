@@ -14,14 +14,14 @@ body{
 }
 
 .menu{
-  padding: 20px;
-  width: 100px;
+  padding: 1vw;
+  width: 10vw;
   float: left;
 }
 
 .menu_btn{
-  font-size: 250%;
-  padding: 10px;
+  font-size: 2vw;
+  padding: .74vw;
   background-color: #004e74;
   border-width: 0;
   color: #a86d4f;
@@ -32,15 +32,16 @@ body{
   display: none;
   position: absolute;
   background-color: white;
-  min-width: 160px;
+  min-width: 7.5vw;
 }
 
 .menu_items a {
   color: black;
-  padding: 12px 16px;
+  padding: 0.2vw 0.2vw;
   text-decoration: none;
   display: block;
   font-family: 'Baloo Bhaina 2';
+
 }
 
 .menu:hover .menu_items {
@@ -73,7 +74,7 @@ body{
     padding-left: 6%;
     font-size: 4.5vw;
     -webkit-animation: fadein 4s;
-    width: 60%;
+    width: 60vw;
     font-family: 'Baloo Bhaina 2';
 }
 
