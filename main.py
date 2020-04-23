@@ -19,7 +19,7 @@ def people():
     c.execute("select * from people where id >= 1")
     result = c.fetchall()
     conn.close()
-    return render_template('people.html', posts = result)
+    return render_template('people.html', results = result)
 
 @app.route("/event")
 def event():
