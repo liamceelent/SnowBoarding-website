@@ -1,7 +1,39 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<div class = "search_gear_container">
+  <div class = "search_bar_gear">
+    <form method="POST">
+      <input name="search_bar">
+    </form>
+  </div>
 
-<p> hi </p>
+  <div class = filter_gear>
+    <button class = "filter_btn">filter</button>
+      <div class="filter_gear_items">
+          <a href="/">home</a>
+          <a href="/gear">gear</a>
+          <a href="/people">people</a>
+          <a href="/event">event</a>
+          <a href="/guide">guide</a>
+      </div>
+  </div>
+</div>
+
+
+{% for post in tests %}
+
+
+<a href="/" class = "gear_conatiner">
+  <div class = "gear_img">
+    <img src="/static/image/{{post[7]}}">
+  </div>
+  <div class="gear_name">
+    <p> {{post[1]}}</p>
+  </div>
+</a>
+
+
+{% endfor %}
 
 {% endblock %}
