@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+
+
+{% for post in result %}
+
+<div class = "gearspec_container">
+  {{post[1]}}
+
+</div>
+
+
+{% endfor %}
+
+{% endblock %}
