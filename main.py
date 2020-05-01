@@ -16,6 +16,8 @@ def gear_page():
 @app.route("/gear", methods = ['POST', 'GET'])
 def gear_post():
 
+    result = []
+
     if request.method == 'POST' and "search_bar" in request.form:
 
         search = request.form['search_bar']
@@ -41,10 +43,9 @@ def gear_post():
         c = conn.cursor()
         c.execute("select * from snowbaord where id >= 1")
 
-        result = c.fetchall()
+        result = result + c.fetchall()
         conn.close()
 
-        return render_template('gear.html', tests = result)
 
     if request.method == 'POST' and "snowboots" in request.form:
 
@@ -53,10 +54,9 @@ def gear_post():
         c = conn.cursor()
         c.execute("select * from snow_boots where id >= 1")
 
-        result = c.fetchall()
+        result = result + c.fetchall()
         conn.close()
 
-        return render_template('gear.html', tests = result)
 
     if request.method == 'POST' and "clothes" in request.form:
 
@@ -65,10 +65,9 @@ def gear_post():
         c = conn.cursor()
         c.execute("select * from clothes where id >= 1")
 
-        result = c.fetchall()
+        result = result + c.fetchall()
         conn.close()
 
-        return render_template('gear.html', tests = result)
 
     if request.method == 'POST' and "snowbinding" in request.form:
 
@@ -77,19 +76,33 @@ def gear_post():
         c = conn.cursor()
         c.execute("select * from snowbinding where id >= 1")
 
-        result = c.fetchall()
+        result = result + c.fetchall()
         conn.close()
 
-        return render_template('gear.html', tests = result)
 
+    return render_template('gear.html', tests = result)
 
-    return render_template('gear.html')
+@app.route("/gear_snowbinding")
+def gear_snowbinding():
+    return render_template('gear_snowbinding.html')
 
+@app.route("/gear_snowbaord")
+def gear_snowbaord():
+    return render_template('gear_snowbaord.html')
+
+@app.route("/gear_clothes")
+def gear_clothes():
+    return render_template('gear_clothes.html')
+
+@app.route("/gear_snow_boots")
+def gear_snow_boots():
+    return render_template('gear_snow_boots.html')
 
 @app.route("/gear_click")
 def gear_click():
 
     search_id = request.args.get('search_id')
+    table = request.args.get('table')
 
     conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
@@ -97,7 +110,7 @@ def gear_click():
     result = c.fetchall()
     conn.close()
 
-    return render_template('gearspec.html', name = search_id, result = result)
+    return render_template('gearspec.html', name = search_id, result = result, table= table)
 
 @app.route("/people")
 def people():

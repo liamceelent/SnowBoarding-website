@@ -2,40 +2,12 @@
 
 {% block content %}
 
-<div class = "search_gear_container">
-  <div class = "search_bar_gear">
-    <form method="POST">
-      <input name="search_bar">
-    </form>
-  </div>
 
-  <div class = filter_gear>
-    <button class = "filter_btn">filter</button>
-      <div class="filter_gear_items">
-        <form method="POST">
-          <button type="submit" name = "snowbaord">snowbaords</button>
-          <button type="submit" name = "snowboots">snowboots</button>
-          <button type="submit" name = "clothes">clothes</button>
-          <button type="submit" name = "snowbinding">snowbindings</button>
-        </form>
-      </div>
-  </div>
-</div>
-
-{% for post in tests %}
-
-<a href="/gear_click?search_id={{post[1]}}" class = "gear_conatiner">
-  <div class = "gear_img">
-    <img src="/static/image/{{post[7]}}">
-  </div>
-  <div class="gear_name">
-    <form method = "POST">
-      <input type="text" name = "gear_individual" value = "{{post[1]}}">
-    </form>
-  </div>
-</a>
+  <a href="/gear_snowbinding">snowbinding</a>
+  <a href="/gear_snowbaord">snowbaord</a>
+  <a href="/gear_clothes">clothes</a>
+  <a href="/gear_snow_boots">snow_boots</a>
 
 
-{% endfor %}
 
 {% endblock %}
