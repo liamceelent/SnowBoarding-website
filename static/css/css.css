@@ -320,6 +320,15 @@ cssssssssssssssssssssssssss
 
 */
 
+.nav_gear_page{
+  padding: 100px 0 0 0;
+  text-align: center;
+}
+
+.nav_gear_page a{
+  padding: 10px;
+
+}
 .search_bar_gear{
   padding: 5% 0 0 0;
   height:20%;
