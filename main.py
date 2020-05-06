@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, session
 import sqlite3
+from func import database
 
 app = Flask(__name__)
 
@@ -62,92 +63,137 @@ def gear_snowbaord():
     result = c.fetchall()
     conn.close()
 
-    if request.method == 'POST' and "search_bar" in request.form:
-        search = request.form['search_bar']
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select * from snowbaord where name LIKE '%"+ search +"%'")
-        result = c.fetchall()
-        conn.close()
+    search_bar = request.form.get('search_bar')
+
+    #brands request
+
+    Burton = request.form.get('Burton')
+    Salomon = request.form.get('Salomon')
+    Lib_Tech = request.form.get('Lib_Tech')
+    Jones_Snowboards = request.form.get('Jones_Snowboards')
+    Gnu = request.form.get('Gnu')
+
+    #colour
+    blue = request.form.get('blue')
+    red = request.form.get('red')
+    orange = request.form.get('orange')
+    pink = request.form.get('pink')
+    white = request.form.get('white')
+    black = request.form.get('black')
+    yellow = request.form.get('yellow')
+    other = request.form.get('other')
+    green = request.form.get('green')
+
+
+    #price
+
+
+    #size
+
+
+    if search_bar is not None:
+        query = "select * from snowbaord where name LIKE '%"+ search_bar +"%'"
+        result = database(query)
         return render_template('gear_snowbaord.html', tests = result)
 
-    if request.method == 'POST' and "Burton" in request.form:
-        brand_search = brand_search + 1
-        search = "Burton"
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select id from snowbaord where brand = ?",(search,))
-        brand_search_ids = brand_search_ids + c.fetchall()
-        conn.close()
+    fcount = 0
+    query = "SELECT * FROM snowbaord "
+
+    # Add "WHERE" if a filter has been applied
+    if Burton or Salomon or Lib_Tech or Jones_Snowboards or Gnu or yellow or blue or red or orange or pink or white or black or other  is not None:
+        query += "WHERE "
+
+    # Check what filters have been applied
+    if Burton is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "brand = 'Burton' " # Add Filter
+        fcount += 1
+
+    if Salomon is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "brand = 'Salomon' " # Add Filter
+        fcount += 1
+
+    if Lib_Tech is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "brand = 'Lib_Tech' " # Add Filter
+        fcount += 1
+
+    if Jones_Snowboards is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "brand = 'Jones_Snowboards' " # Add Filter
+        fcount += 1
+
+    if Gnu is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "brand = 'Gnu'" # Add Filter
+        fcount += 1
+
+    if yellow is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =1) " # Add Filter
+        fcount += 1
+
+    if blue is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =2) " # Add Filter
+        fcount += 1
+
+    if orange is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =7) " # Add Filter
+        fcount += 1
+
+    if pink is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =8) " # Add Filter
+        fcount += 1
+
+    if other is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =3) " # Add Filter
+        fcount += 1
+
+    if white is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =4) " # Add Filter
+        fcount += 1
+
+    if black is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =5) " # Add Filter
+        fcount += 1
+
+    if red is not None:
+        if fcount > 0:
+            query += "AND " # Check if "AND" is neccessary
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =6) " # Add Filter
+        fcount += 1
+
+    # Connect to databse and preform query
+    conn = sqlite3.connect('snowbaord.db')
+    c = conn.cursor()
+    c.execute(query)
+    bike = c.fetchall()
+    conn.close()
+    return render_template("gear_snowbaord.html", tests = bike)
 
 
-    if request.method == 'POST' and "Salomon" in request.form:
-        brand_search = brand_search + 1
-        search = "Salomon"
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select id from snowbaord where brand = ?",(search,))
-        brand_search_ids = brand_search_ids + c.fetchall()
-        conn.close()
 
 
-    if request.method == 'POST' and "Lib_Tech" in request.form:
-        brand_search = brand_search + 1
-        search = "Lib_Tech"
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select id from snowbaord where brand = ?",(search,))
-        brand_search_ids = brand_search_ids + c.fetchall()
-        conn.close()
-
-
-    if request.method == 'POST' and "Jones_Snowboards" in request.form:
-        brand_search = brand_search + 1
-        search = "Jones_Snowboards"
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select id from snowbaord where brand = ?",(search,))
-        brand_search_ids = brand_search_ids + c.fetchall()
-        conn.close()
-
-
-    if request.method == 'POST' and "Gnu" in request.form:
-        brand_search = brand_search + 1
-        search = "Gnu"
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select id from snowbaord where brand = ?",(search,))
-        brand_search_ids = brand_search_ids + c.fetchall()
-        conn.close()
-
-    if request.method == 'POST' and "yellow" in request.form:
-        colour_search = colour_search + 1
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select id from snowbaord where id =(select snowbaord_id from snowbaord_colour where colour_id =5)")
-        colour_search_ids = colour_search_ids + c.fetchall()
-        conn.close()
-
-    if request.method == 'POST' and "140" in request.form:
-        size_search = size_search + 1
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select id from snowbaord where size = 140")
-        size_search_ids = size_search_ids + c.fetchall()
-        conn.close()
-
-    if request.method == 'POST' and "300" in request.form:
-        price_search = price_search + 1
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select id from snowbaord where price <=300")
-        price_search_ids = price_search_ids + c.fetchall()
-        conn.close()
-
-
-
-
-    return render_template('gear_snowbaord.html', tests = result, price_search_ids = price_search_ids,  brand_search_ids = brand_search_ids, colour_search_ids = colour_search_ids, size_search_ids = size_search_ids )
+    return render_template('gear_snowbaord.html', tests = result)
 
 
 
@@ -217,20 +263,16 @@ def gear_click():
 
 @app.route("/people")
 def people():
-
-    conn = sqlite3.connect("snowbaord.db")
-    c = conn.cursor()
-    c.execute("select * from people where id >= 1")
-    result = c.fetchall()
-    conn.close()
+    query = "select * from people where id >= 1"
+    result = database(query)
     return render_template('people.html', results = result)
 
 
 
 
-@app.route("/event")
+@app.route("/forms")
 def event():
-    return render_template('event.html')
+    return render_template('forms.html')
 
 
 
