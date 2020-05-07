@@ -85,103 +85,181 @@ def gear_snowbaord():
     green = request.form.get('green')
 
 
-    #price
-
-
-    #size
-
-
     if search_bar is not None:
         query = "select * from snowbaord where name LIKE '%"+ search_bar +"%'"
         result = database(query)
         return render_template('gear_snowbaord.html', tests = result)
 
     fcount = 0
+    bcount = 0
+    ccount = 0
+
+    if Burton is not None:
+        bcount += 1
+    if Salomon is not None:
+        bcount += 1
+    if Lib_Tech is not None:
+        bcount += 1
+    if Jones_Snowboards is not None:
+        bcount += 1
+    if Gnu is not None:
+        bcount += 1
+
+    if blue is not None:
+        ccount += 1
+    if red is not None:
+        ccount += 1
+    if orange is not None:
+        ccount += 1
+    if pink is not None:
+        ccount += 1
+    if white is not None:
+        ccount += 1
+    if black is not None:
+        ccount += 1
+    if yellow is not None:
+        ccount += 1
+    if other is not None:
+        ccount += 1
+
     query = "SELECT * FROM snowbaord "
 
-    # Add "WHERE" if a filter has been applied
-    if Burton or Salomon or Lib_Tech or Jones_Snowboards or Gnu or yellow or blue or red or orange or pink or white or black or other  is not None:
+
+    if bcount or ccount >0:
         query += "WHERE "
 
-    # Check what filters have been applied
+
     if Burton is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if bcount == 1:
+                query += "AND "
+        if fcount > 0:
+            if bcount >1:
+                query += "OR "
         query += "brand = 'Burton' " # Add Filter
         fcount += 1
 
     if Salomon is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if bcount == 1:
+                query += "AND "
+        if fcount > 0:
+            if bcount >1:
+                query += "OR "
         query += "brand = 'Salomon' " # Add Filter
         fcount += 1
 
     if Lib_Tech is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if bcount == 1:
+                query += "AND "
+        if fcount > 0:
+            if bcount >1:
+                query += "OR "
         query += "brand = 'Lib_Tech' " # Add Filter
         fcount += 1
 
     if Jones_Snowboards is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if bcount == 1:
+                query += "AND "
+        if fcount > 0:
+            if bcount >1:
+                query += "OR "
         query += "brand = 'Jones_Snowboards' " # Add Filter
         fcount += 1
 
     if Gnu is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if bcount == 1:
+                query += "AND "
+        if fcount > 0:
+            if bcount >1:
+                query += "OR "
         query += "brand = 'Gnu'" # Add Filter
         fcount += 1
 
     if yellow is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if ccount == 1:
+                query += "AND "
+        if fcount > 0:
+            if ccount > 1:
+                query += "OR "
         query += "id =(select snowbaord_id from snowbaord_colour where colour_id =1) " # Add Filter
         fcount += 1
 
     if blue is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if ccount == 1:
+                query += "AND "
+        if fcount > 0:
+            if ccount > 1:
+                query += "OR "
         query += "id =(select snowbaord_id from snowbaord_colour where colour_id =2) " # Add Filter
         fcount += 1
 
     if orange is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if ccount == 1:
+                query += "AND "
+        if fcount > 0:
+            if ccount > 1:
+                query += "OR "
         query += "id =(select snowbaord_id from snowbaord_colour where colour_id =7) " # Add Filter
         fcount += 1
 
     if pink is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if ccount == 1:
+                query += "AND "
+        if fcount > 0:
+            if ccount > 1:
+                query += "OR "
         query += "id =(select snowbaord_id from snowbaord_colour where colour_id =8) " # Add Filter
         fcount += 1
 
     if other is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if ccount == 1:
+                query += "AND "
+        if fcount > 0:
+            if ccount > 1:
+                query += "OR "
         query += "id =(select snowbaord_id from snowbaord_colour where colour_id =3) " # Add Filter
         fcount += 1
 
     if white is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if ccount == 1:
+                query += "AND "
+        if fcount > 0:
+            if ccount > 1:
+                query += "OR "
         query += "id =(select snowbaord_id from snowbaord_colour where colour_id =4) " # Add Filter
         fcount += 1
 
     if black is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if ccount == 1:
+                query += "AND "
+        if fcount > 0:
+            if ccount > 1:
+                query += "OR "
         query += "id =(select snowbaord_id from snowbaord_colour where colour_id =5) " # Add Filter
         fcount += 1
 
     if red is not None:
         if fcount > 0:
-            query += "AND " # Check if "AND" is neccessary
+            if ccount == 1:
+                query += "AND "
+        if fcount > 0:
+            if ccount > 1:
+                query += "OR "
         query += "id =(select snowbaord_id from snowbaord_colour where colour_id =6) " # Add Filter
         fcount += 1
 
+    print(query)
     # Connect to databse and preform query
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
