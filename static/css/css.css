@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Anton&family=Baloo+Bhaina+2&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 @-webkit-keyframes fadein {
     from { opacity: 0; }
@@ -38,7 +38,7 @@ p {
 }
 /* menu bar css */
 .menu{
-  padding: 10px;
+  margin-top: 10px;
   width:7.3%;
   margin:0%;
   float: left;
@@ -46,12 +46,16 @@ p {
 }
 
 .menu_btn{
+  margin-top: 7.5px;
   font-size: 200%;
   padding: 10px;
   background-color: white;
   border-width: 0;
   color: black;
   transition: 0.3s;
+  font-family: 'Roboto';
+  border: 5px solid black;
+  height:75px;
 }
 
 .menu_items{
@@ -59,14 +63,17 @@ p {
   position: absolute;
   background-color: white;
   min-width: 7.5vw;
+  font-family: 'Roboto';
+  border: 0.1vw solid black;
 }
 
 .menu_items a {
   color: black;
-  padding: 0.2vw 0.2vw;
+  padding: 10px 10px;
   text-decoration: none;
   display: block;
-  font-family: 'Baloo Bhaina 2';
+  font-family: 'Roboto';
+  font-size: 30px;
 }
 
 /* menu bar hover css */
@@ -116,7 +123,7 @@ cssssssssssssssssssssssssss
     font-size: 4.5vw;
     -webkit-animation: fadein 4s;
     width: 60vw;
-    font-family: 'Baloo Bhaina 2';
+    font-family: 'Roboto';
     display: none;
 }
 /* home menu for the width of a ipad */
@@ -125,7 +132,7 @@ cssssssssssssssssssssssssss
   height:40%;
   font-size: 70px;
   padding-top: 10%;
-  font-family: 'Baloo Bhaina 2';
+  font-family: 'Roboto';
 }
 
 .homeimg_ipad{
@@ -321,9 +328,7 @@ cssssssssssssssssssssssssss
 }
 
 .people_container{
-  border-width: 2px;
-  border-color: black;
-  border-style: solid;
+  border: 10px solid black;
 }
 
 .people_writing{
@@ -345,7 +350,9 @@ cssssssssssssssssssssssssss
 
 */
 
+
 .gear_wrapper{
+  min-height:200%; /* this is so the shop ancor tag takes you to the bottom */
 }
 
 .gear_start{
@@ -355,70 +362,54 @@ cssssssssssssssssssssssssss
   height:100%;
 }
 
-.writing_box_gear{
+.writing_box_gear p{
   background-color: white;
+  margin: 20% 0 0 40%;
+  width: 20%;
+  height: 10%;
+  z-index: 1;
+  text-align: center;
+  font
 }
 
 .gear_img_home{
   height: 100%;
   width:100%;
-  background-image: url("/static/image_gear/background_nav.jpg");
+  background-image: url("/static/image_gear/background_nav3.jpg");
   float: left;
   background-repeat: no-repeat;
   background-position:left;
   background-size: cover;
 }
 
-.clothes_container{
+.clothes_container,.snowboots_container,.snowbaord_container,.snowbinding_container{
   width:23%;
   float:left;
   text-align: center;
   margin:1%;
 }
 
-.snowboots_container{
-  width:23%;
-  float:left;
-  text-align: center;
-  margin:1%;
-}
 
-.snowbaord_container{
-  width:23%;
-  float:left;
-  text-align: center;
-  margin:1%;
-}
-
-.snowbinding_container{
-  width:23%;
-  float:left;
-  text-align: center;
-  margin:1%;
-}
-
-.snowbinding_contents{
+.snowbinding_contents,.clothes_contents,.snowbaord_contents,.snowboots_contents{
   padding:5%;
   border: 0.1vw solid black;
-  height:75%
+  height:75%;
 }
 
-.clothes_contents{
-  padding:5%;
-  border: 0.1vw solid black;
-  height:75%
+.snowbootsimg,.clothesimg{
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position:center;
+  background-size: cover;
+  transition: 0.3s;
 }
-.snowbaord_contents{
-  padding:5%;
-  border: 0.1vw solid black;
-  height:75%
-}
-.snowboots_contents{
-  padding:5%;
-  border: 0.1vw solid black;
-  height:75%
+.snowbootsimg{
+  background-image: url("/static/image_gear/snowbaord.jpg");
 }
 
+.clothesimg{
+  background-image: url("/static/image_gear/clothes.jpg");
+}
 
 
 .search_bar_gear{
@@ -450,7 +441,7 @@ cssssssssssssssssssssssssss
   background-position:left;
   background-size: cover;
   transition: 0.3s;
-  width: 100%
+  width: 100%;
 }
 
 .gear_name{
