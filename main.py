@@ -212,6 +212,9 @@ def gear_snowbaord():
         if ccount > 1:
             query += "AND ("
 
+    if bcount == 0:
+        if ccount >1:
+            query += "("
 
 
     if yellow is not None:
@@ -302,22 +305,67 @@ def gear_snowbaord():
 # sizesssssssssssssssssssssssssssssssss
     gcount = 0
 
-    if bcount >= 1:
-        if ccount >= 1:
+    if bcount or ccount >= 1:
             if scount > 1:
                 query += "AND ("
 
     if one_forty is not None:
         if bcount or ccount >= 1:
             if scount == 1:
-                query += "AND "
+                query += " AND "
         if gcount > 0:
             if scount > 1:
                 query += "OR "
         query += "size = 140 " # Add Filter
-        lcount += 1
+        gcount += 1
+
+    if one_forty_two is not None:
+        if bcount or ccount >= 1:
+            if scount == 1:
+                query += " AND "
+        if gcount > 0:
+            if scount > 1:
+                query += "OR "
+        query += "size = 142 " # Add Filter
+        gcount += 1
+
+    if one_forty_four is not None:
+        if bcount or ccount >= 1:
+            if scount == 1:
+                query += " AND "
+        if gcount > 0:
+            if scount > 1:
+                query += "OR "
+        query += "size = 144 " # Add Filter
+        gcount += 1
+
+    if one_forty_six is not None:
+        if bcount or ccount >= 1:
+            if scount == 1:
+                query += " AND "
+        if gcount > 0:
+            if scount > 1:
+                query += "OR "
+        query += "size = 146 " # Add Filter
+        gcount += 1
+
+    if one_forty_eight is not None:
+        if bcount or ccount >= 1:
+            if scount == 1:
+                query += " AND "
+        if gcount > 0:
+            if scount > 1:
+                query += "OR "
+        query += "size = 148 " # Add Filter
+        gcount += 1
+
+    if bcount or ccount >= 1:
+        if scount >1:
+            query += ")"
+
 
     print(query)
+    print(scount, gcount)
     # Connect to databse and preform query
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
