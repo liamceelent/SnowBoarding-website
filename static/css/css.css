@@ -396,14 +396,14 @@ cssssssssssssssssssssssssss
   height:75%;
 }
 
-.snowbootsimg,.clothesimg{
+.snowbootsimg,.clothesimg,.snowbaordimg,.snowbindingimg{
   height: 100%;
   background-repeat: no-repeat;
   background-position:center;
   background-size: cover;
   transition: 0.3s;
 }
-.snowbootsimg{
+.snowbaordimg{
   background-image: url("/static/image_gear/snowbaord.jpg");
 }
 
@@ -411,6 +411,12 @@ cssssssssssssssssssssssssss
   background-image: url("/static/image_gear/clothes.jpg");
 }
 
+.snowbindingimg{
+  background-image: url("/static/image_gear/snowbinding.jpg");
+}
+.snowbootsimg{
+  background-image: url("/static/image_gear/snowboots.jpg");
+}
 
 .search_bar_gear{
   padding: 5% 0 0 0;

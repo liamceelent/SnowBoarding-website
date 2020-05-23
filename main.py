@@ -28,6 +28,7 @@ def gear_snowbinding():
     c.execute("select * from snowbinding where id >= 1")
     result = c.fetchall()
     conn.close()
+    # search bar for snwobinding
 
     if request.method == 'POST' and "search_bar" in request.form:
         search = request.form['search_bar']
@@ -56,7 +57,7 @@ def gear_snowbaord():
     size_search_ids = []
     price_search = 0
     price_search_ids = []
-
+    # this query is when loading the page all snowbaords laod
     conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
     c.execute("select * from snowbaord where id >= 1")
@@ -92,15 +93,27 @@ def gear_snowbaord():
     one_forty_six = request.form.get('146')
     one_forty_eight = request.form.get('148')
 
+    #prices
+
+    l200 = request.form.get('200')
+    l300 = request.form.get('300')
+    l400 = request.form.get('400')
+    l500 = request.form.get('500')
+    l600 = request.form.get('600')
+    g600 = request.form.get('600+')
+
+    # search bar code
     if search_bar is not None:
-        query = "select * from snowbaord where name LIKE '%"+ search_bar +"%'"
+        query = "select * from snowbaord where name LIKE '%"+ search_bar +"%'" # so anything that has a like term shows
         result = database(query)
         return render_template('gear_snowbaord.html', tests = result)
 
-    bcount = 0
-    ccount = 0
-    scount = 0
+    bcount = 0 # counting how many brand request forms we have
+    ccount = 0 # counting how many color request forms we have
+    scount = 0 # counting how many size request forms we have
+    pcount = 0 # counting how many price request forms we have
 
+    #counting the request forms brands
     if Burton is not None:
         bcount += 1
     if Salomon is not None:
@@ -111,7 +124,7 @@ def gear_snowbaord():
         bcount += 1
     if Gnu is not None:
         bcount += 1
-
+    #counting the request forms color
     if blue is not None:
         ccount += 1
     if red is not None:
@@ -128,7 +141,7 @@ def gear_snowbaord():
         ccount += 1
     if other is not None:
         ccount += 1
-
+    #counting the request forms size
     if one_forty is not None:
         scount += 1
     if one_forty_two is not None:
@@ -139,28 +152,42 @@ def gear_snowbaord():
         scount += 1
     if one_forty_eight is not None:
         scount += 1
+    #counting the request forms price
+    if l200 is not None:
+        pcount += 1
+    if l300 is not None:
+        pcount += 1
+    if l400 is not None:
+        pcount += 1
+    if l500 is not None:
+        pcount += 1
+    if l600 is not None:
+        pcount += 1
+    if g600 is not None:
+        pcount += 1
 
 # braqndssssssssssssssssssssssssssssssss
-    fcount = 0
+
+    fcount = 0 # using this to see how many brands have been placed in the query
 
     query = "SELECT * FROM snowbaord "
-    if bcount or ccount or scount > 0:
+    if bcount or ccount or scount or pcount > 0:
         if fcount == 0:
             query += "WHERE "
 
     if bcount > 1:
-        query += "("
+        query += "(" # if there is more than one brand to be filtered
 
 
-    if Burton is not None:
-        if fcount > 0:
-            if bcount == 1:
-                query += "AND "
-        if fcount > 0:
-            if bcount >1:
-                query += "OR "
+    if Burton is not None: # checking if the reqeust form is empty
+        if fcount > 0:# checking whether another brand has be input into the query
+            if bcount == 1: # if there is only one brand
+                query += "AND " # add filter
+        if fcount > 0: # checking if another brand is in query
+            if bcount >1: # checking if another brand is in query
+                query += "OR " # if another brand has been entered
         query += "brand = 'Burton' " # Add Filter
-        fcount += 1
+        fcount += 1 # telling that one brand has been entered
 
     if Salomon is not None:
         if fcount > 0:
@@ -169,7 +196,7 @@ def gear_snowbaord():
         if fcount > 0:
             if bcount >1:
                 query += "OR "
-        query += "brand = 'Salomon' " # Add Filter
+        query += "brand = 'Salomon' "
         fcount += 1
 
     if Lib_Tech is not None:
@@ -179,7 +206,7 @@ def gear_snowbaord():
         if fcount > 0:
             if bcount >1:
                 query += "OR "
-        query += "brand = 'Lib_Tech' " # Add Filter
+        query += "brand = 'Lib_Tech' "
         fcount += 1
 
     if Jones_Snowboards is not None:
@@ -189,7 +216,7 @@ def gear_snowbaord():
         if fcount > 0:
             if bcount >1:
                 query += "OR "
-        query += "brand = 'Jones_Snowboards' " # Add Filter
+        query += "brand = 'Jones_Snowboards' "
         fcount += 1
 
     if Gnu is not None:
@@ -199,33 +226,34 @@ def gear_snowbaord():
         if fcount > 0:
             if bcount >1:
                 query += "OR "
-        query += "brand = 'Gnu'" # Add Filter
+        query += "brand = 'Gnu'"
         fcount += 1
 
     if bcount >1:
         query += ")"
 
 # colorsssssssssssssssssssssss
-    lcount = 0
+
+    lcount = 0 # counting how many color have been put into the query
 
     if bcount >= 1:
         if ccount > 1:
-            query += "AND ("
+            query += "AND (" #checks if there has been a brand and if there is more than one color
 
     if bcount == 0:
         if ccount >1:
-            query += "("
+            query += "(" # if no brand but more that one color
 
 
-    if yellow is not None:
-        if bcount >= 1:
-            if ccount == 1:
-                    query += "AND "
-        if lcount > 0:
-            if ccount > 1:
-                query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =1) " # Add Filter
-        lcount += 1
+    if yellow is not None: # checking weather form is empty or not
+        if bcount >= 1: # if there is a brand entered
+            if ccount == 1: # if there is only one color
+                    query += "AND " # add filter
+        if lcount > 0: # see if any color have already been put into the query
+            if ccount > 1: # checking if there is more than one color
+                query += "OR " # add filter
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =1) " # add filter
+        lcount += 1 # plus the amount of colors in the query
 
     if blue is not None:
         if bcount >= 1:
@@ -234,7 +262,7 @@ def gear_snowbaord():
         if lcount > 0:
             if ccount > 1:
                 query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =2) " # Add Filter
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =2) "
         lcount += 1
 
     if orange is not None:
@@ -244,7 +272,7 @@ def gear_snowbaord():
         if lcount > 0:
             if lcount > 1:
                 query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =7) " # Add Filter
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =7) "
         fcount += 1
 
     if pink is not None:
@@ -254,7 +282,7 @@ def gear_snowbaord():
         if lcount > 0:
             if ccount > 1:
                 query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =8) " # Add Filter
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =8) "
         lcount += 1
 
     if other is not None:
@@ -264,7 +292,7 @@ def gear_snowbaord():
         if lcount > 0:
             if ccount > 1:
                 query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =3) " # Add Filter
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =3) "
         lcount += 1
 
     if white is not None:
@@ -274,7 +302,7 @@ def gear_snowbaord():
         if lcount > 0:
             if ccount > 1:
                 query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =4) " # Add Filter
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =4) "
         lcount += 1
 
     if black is not None:
@@ -284,7 +312,7 @@ def gear_snowbaord():
         if lcount > 0:
             if ccount > 1:
                 query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =5) " # Add Filter
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =5) "
         lcount += 1
 
     if red is not None:
@@ -294,28 +322,28 @@ def gear_snowbaord():
         if lcount > 0:
             if ccount > 1:
                 query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =6) " # Add Filter
+        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =6) "
         lcount += 1
 
     if ccount > 1:
         query += ")"
 
-    print(query)
+    print(query)#debug
 
 # sizesssssssssssssssssssssssssssssssss
     gcount = 0
 
-    if bcount or ccount >= 1:
+    if bcount or ccount >= 1: # checking if and is neccessary and brackets
             if scount > 1:
                 query += "AND ("
 
-    if one_forty is not None:
+    if one_forty is not None: # checking if the form is empty
         if bcount or ccount >= 1:
-            if scount == 1:
-                query += " AND "
-        if gcount > 0:
-            if scount > 1:
-                query += "OR "
+            if scount == 1: # seeing if and is neccary with no brakets
+                query += " AND " # Add Filter
+        if gcount > 0: # if more than one size has been added to the query
+            if scount > 1: # checking if ther has been more than filter for size
+                query += "OR " # Add Filter
         query += "size = 140 " # Add Filter
         gcount += 1
 
@@ -326,7 +354,7 @@ def gear_snowbaord():
         if gcount > 0:
             if scount > 1:
                 query += "OR "
-        query += "size = 142 " # Add Filter
+        query += "size = 142 "
         gcount += 1
 
     if one_forty_four is not None:
@@ -336,7 +364,7 @@ def gear_snowbaord():
         if gcount > 0:
             if scount > 1:
                 query += "OR "
-        query += "size = 144 " # Add Filter
+        query += "size = 144 "
         gcount += 1
 
     if one_forty_six is not None:
@@ -346,7 +374,7 @@ def gear_snowbaord():
         if gcount > 0:
             if scount > 1:
                 query += "OR "
-        query += "size = 146 " # Add Filter
+        query += "size = 146 "
         gcount += 1
 
     if one_forty_eight is not None:
@@ -356,17 +384,60 @@ def gear_snowbaord():
         if gcount > 0:
             if scount > 1:
                 query += "OR "
-        query += "size = 148 " # Add Filter
+        query += "size = 148 "
         gcount += 1
 
     if bcount or ccount >= 1:
         if scount >1:
             query += ")"
 
+# price
 
-    print(query)
-    print(scount, gcount)
-    # Connect to databse and preform query
+    kcount = 0 # counting if there has been a query
+
+    if g600 is not None: # checking if its not none
+        if kcount == 0: # checking that no other bigger filter have been aplied
+            query += "price >= 600" # add filter
+            kcount += 1 # showing that a filter has already beeen added
+
+    if g600 is None:
+        if l600 is not None:
+            if kcount == 0:
+                query += "price <= 600"
+                kcount += 1
+
+    if g600 or l600  is None:
+        if l500 is not None:
+            if kcount == 0:
+                query += "price <= 500"
+                kcount += 1
+
+    if g600 or l600 or l500  is None:
+        if l400 is not None:
+            if kcount ==0:
+                query += "price <= 400"
+                kcount += 1
+
+    if pcount > 0:
+        if bcount or ccount or scount > 0:
+            query += " AND "
+
+    if g600 or l600 or l500 or l400 is None:
+        if l300 is not None:
+            if kcount == 0:
+                query += "price <= 300"
+                kcount += 1
+
+    if g600 or l600 or l500 or l400 or l300 is None:
+        if l200 is not None:
+            if kcount == 0:
+                query += "price <= 200"
+                kcount += 1
+
+
+    print(query) #debug
+    print(scount, gcount)#debug
+
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
     c.execute(query)
