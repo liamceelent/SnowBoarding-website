@@ -1,6 +1,8 @@
 from flask import Flask, redirect, url_for, render_template, request, session
 import sqlite3
 from func import database
+import os
+import hashlib
 
 app = Flask(__name__)
 
@@ -8,16 +10,91 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
+@app.route("/login")
+def login():
+    return render_template('login.html')
+
+@app.route("/login", methods = ['POST', 'GET'])
+def create_acc():
+
+    if request.method == 'POST' and "create_name" in request.form:
+
+        name = request.form['create_name']
+        password = request.form['create_pass']
+
+        salt = os.urandom(32)
+        key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+
+        conn = sqlite3.connect("snowbaord.db")
+        brand = []
+        brand.insert(0, name)
+        brand.insert(1, salt)
+        brand.insert(2, key)
+        brand = tuple(brand)
+
+        query = "INSERT INTO user(name, salt, key) VALUES(?, ?, ?)"
+
+        c = conn.cursor()
+        c.execute(query, brand)
+        conn.commit()
+        conn.close()
+        print(query,brand)
+
+        return render_template('login.html')
+
+    if request.method == 'POST' and "name" in request.form:
+
+        name = request.form['name']
+        password = request.form['pass']
+
+        conn = sqlite3.connect("snowbaord.db")
+        c = conn.cursor()
+        c.execute("select salt, key from user where name = ?",(name,))
+        result = c.fetchall()
+        conn.close()
+        print(result)
+
+        if not result:
+            stat = "wrong user name mate"
+            return render_template('login.html', stat=stat)
+        else:
+            salt = result[0][0]
+            key = result[0][1]
+            new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+            if key == new_key:
+                return redirect(url_for("home"))
+            else:
+                stat = "wrong user name mate"
+                return render_template('login.html', stat=stat)
+
+    if request.method == 'POST' and "name" in request.form:
+
+        name = request.form['name']
+        password = request.form['pass']
+
+        a = User.query.filter_by(name=name).first()
+        if a is not None:
+            salt = a.salt
+            key = a.key
+            new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+            if key == new_key:
+                return redirect(url_for("home"))
+
+            else:
+                stat = "wrong user name mate"
+                return render_template('login.html', stat=stat)
+        else:
+            stat = "wrong user name mate"
+            return render_template('login.html', stat=stat)
+
+
 
 
 @app.route("/gear")
 def gear_page():
     return render_template('gear.html')
 
-@app.route("/gear", methods = ['POST', 'GET'])
-def gear_post():
 
-    return render_template('gear.html')
 
 
 @app.route("/gear_snowbinding", methods = ['POST', 'GET'])
@@ -49,14 +126,6 @@ def gear_snowbinding():
 @app.route("/gear_snowbaord", methods = ['POST', 'GET'])
 def gear_snowbaord():
 
-    brand_search = 0
-    brand_search_ids = []
-    colour_search = 0
-    colour_search_ids = []
-    size_search = 0
-    size_search_ids = []
-    price_search = 0
-    price_search_ids = []
     # this query is when loading the page all snowbaords laod
     conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
@@ -394,6 +463,9 @@ def gear_snowbaord():
 # price
 
     kcount = 0 # counting if there has been a query
+    if pcount > 0:
+        if bcount or ccount or scount > 0:
+            query += " AND "
 
     if g600 is not None: # checking if its not none
         if kcount == 0: # checking that no other bigger filter have been aplied
@@ -418,9 +490,6 @@ def gear_snowbaord():
                 query += "price <= 400"
                 kcount += 1
 
-    if pcount > 0:
-        if bcount or ccount or scount > 0:
-            query += " AND "
 
     if g600 or l600 or l500 or l400 is None:
         if l300 is not None:
@@ -529,7 +598,23 @@ def people():
 def event():
     return render_template('forms.html')
 
+@app.route("/forms", methods=['POST'])
+def forms_post():
 
+    if request.method == 'POST' and "blogpost" in request.form:
+        blogpost = request.form['blogpost']
+
+        conn = sqlite3.connect("snowbaord.db")
+        c = conn.cursor()
+        c.execute("INSERT INTO formpost post VALUES ?",(blogpost,))
+        result = c.fetchall()
+        conn.close()
+
+        stat = "added"
+
+        return render_template('forms.html', stat=stat)
+
+    return render_template('forms.html')
 
 
 @app.route("/guide")

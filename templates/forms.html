@@ -2,6 +2,10 @@
 
 {% block content %}
 
-<p> hi </p>
+<form method="POST">
+  <textarea name = "blogpost" rows="4" cols="50"></textarea>
+  <input type="submit" value="Submit">
+</form>
 
+{{stat}}
 {% endblock %}

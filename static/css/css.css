@@ -34,15 +34,30 @@ p {
   background-position:left;
   background-size: cover;
   transition: 0.3s;
+}
+
+.nav_login{
+  margin:10px 10px 0 0;
+  width:3%;
+  height:80%;
+  background-image: url("/static/image/login_logo.png");
+  float: left;
+  background-repeat: no-repeat;
+  background-position:left;
+  background-size: cover;
+  transition: 0.3s;
+  right:100%;
 
 }
+
 /* menu bar css */
 .menu{
   margin-top: 10px;
-  width:7.3%;
+  width:4.5%;
   margin:0%;
   float: left;
   z-index: 1;
+  margin-right: 88%;
 }
 
 .menu_btn{
@@ -216,6 +231,9 @@ cssssssssssssssssssssssssss
   }
 
 }
+
+
+
 /*
 
 guideeeeeeeeeeeeeeeeeeeeeeee
@@ -308,6 +326,35 @@ cssssssssssssssssssssssssss
   height:100%;
   padding:0 20% 0 20%;
   float: left;
+
+}
+
+/*
+
+loginnnnnnnnnnnnnnnnnnn ppage
+
+cssssssssssssssssssssssssss
+
+
+*/
+
+.create_box{
+  padding: 1%;
+  border: 2px solid grey;
+  margin-top:1%;
+  margin-bottom: 1%;
+  margin-right:5%;
+  margin-left:5%;
+  display:flex;
+}
+
+.sign_up_section{
+  width: 60%;
+  margin-right:2.5%;
+  border-right: 1px solid grey;
+}
+.login_section{
+  width: 35%;
 
 }
 
