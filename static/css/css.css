@@ -497,10 +497,7 @@ cssssssssssssssssssssssssss
   width: 100%;
 }
 
-.gear_name{
-  margin: 0%;
-  text-align: center;
-}
+
 
 .search_gear_container{
   width:100%;
@@ -568,7 +565,39 @@ cssssssssssssssssssssssssss
   min-height: 100%;
 }
 
+
+/* gear inddivdual pages css */
+
+.gearspec_container{
+  min-height: 100%;
+}
+.gearspec_title{
+  width:100%;
+  text-align: center;
+}
+.clicked_img {
+  width: 50%;
+  float: left;
+}
+.clicked_img img{
+  width: 90%;
+  float: left;
+  margin:0 0 10px 100px;
+}
+
+
+.gearspec_description{
+  text-align: center;
+}
+
+.gearspec_specs{
+  text-align: center;
+}
+
+
+
 /*
+
 
 eventtttttttttttttttttt
 

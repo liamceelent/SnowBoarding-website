@@ -2,15 +2,31 @@
 
 {% block content %}
 
-{{table}}
-
 {% for post in result %}
 
 <div class = "gearspec_container">
-  <div class = "gear_name">
-    {{post[1]}}
-
+  <div class = "gearspec_title">
+      <h1>   {{post[1]}} </h1>
   </div>
+
+  <div class = "clicked_img">
+    <img src="/static/image/{{post[7]}}">
+  </div>
+  <div class = "gearspec_description">
+    <h1> description</h1>
+    {{post[5]}}
+  </div>
+
+  <div class = "gearspec_specs">
+    <h1> specs</h1>
+    {{post[0]}}
+    {{post[2]}}
+    {{post[3]}}
+    {{post[4]}}
+    {{post[5]}}
+    {{post[6]}}
+    {{post[8]}}
+
 </div>
 
 

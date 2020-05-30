@@ -1,14 +1,23 @@
 from flask import Flask, redirect, url_for, render_template, request, session
 import sqlite3
-from func import database
+from func import database, filterbrand, filtercolor, filtersize
 import os
 import hashlib
 
+
+
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'super secret key'
+
 
 @app.route("/")
 def home():
-    return render_template('home.html')
+    if 'username' in session:
+        stat = "you are logged in as", session['username']
+        return render_template('home.html', stat = stat)
+    else:
+        return render_template('home.html')
 
 @app.route("/login")
 def login():
@@ -62,6 +71,8 @@ def create_acc():
             key = result[0][1]
             new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
             if key == new_key:
+                session['key_name'] = 123312
+                session['username'] = name
                 return redirect(url_for("home"))
             else:
                 stat = "wrong user name mate"
@@ -90,9 +101,14 @@ def create_acc():
 
 
 
-@app.route("/gear")
+@app.route("/gear", methods = ['POST', 'GET'])
 def gear_page():
-    return render_template('gear.html')
+    if 'key_name' in session:
+        session_var = session['key_name']
+        return render_template('gear.html')
+    else:
+        return render_template('home.html')
+
 
 
 
@@ -125,13 +141,6 @@ def gear_snowbinding():
 
 @app.route("/gear_snowbaord", methods = ['POST', 'GET'])
 def gear_snowbaord():
-
-    # this query is when loading the page all snowbaords laod
-    conn = sqlite3.connect("snowbaord.db")
-    c = conn.cursor()
-    c.execute("select * from snowbaord where id >= 1")
-    test = c.fetchall()
-    conn.close()
 
     search_bar = request.form.get('search_bar')
 
@@ -210,7 +219,6 @@ def gear_snowbaord():
         ccount += 1
     if other is not None:
         ccount += 1
-    #counting the request forms size
     if one_forty is not None:
         scount += 1
     if one_forty_two is not None:
@@ -240,6 +248,7 @@ def gear_snowbaord():
     fcount = 0 # using this to see how many brands have been placed in the query
 
     query = "SELECT * FROM snowbaord "
+
     if bcount or ccount or scount or pcount > 0:
         if fcount == 0:
             query += "WHERE "
@@ -249,53 +258,23 @@ def gear_snowbaord():
 
 
     if Burton is not None: # checking if the reqeust form is empty
-        if fcount > 0:# checking whether another brand has be input into the query
-            if bcount == 1: # if there is only one brand
-                query += "AND " # add filter
-        if fcount > 0: # checking if another brand is in query
-            if bcount >1: # checking if another brand is in query
-                query += "OR " # if another brand has been entered
-        query += "brand = 'Burton' " # Add Filter
-        fcount += 1 # telling that one brand has been entered
+        query += filterbrand(fcount,bcount,"brand = 'Burton'")
+        fcount += 1
 
     if Salomon is not None:
-        if fcount > 0:
-            if bcount == 1:
-                query += "AND "
-        if fcount > 0:
-            if bcount >1:
-                query += "OR "
-        query += "brand = 'Salomon' "
+        query += filterbrand(fcount,bcount,"brand = 'Salomon'")
         fcount += 1
 
     if Lib_Tech is not None:
-        if fcount > 0:
-            if bcount == 1:
-                query += "AND "
-        if fcount > 0:
-            if bcount >1:
-                query += "OR "
-        query += "brand = 'Lib_Tech' "
+        query += filterbrand(fcount,bcount,"brand = 'Lib_Tech'")
         fcount += 1
 
     if Jones_Snowboards is not None:
-        if fcount > 0:
-            if bcount == 1:
-                query += "AND "
-        if fcount > 0:
-            if bcount >1:
-                query += "OR "
-        query += "brand = 'Jones_Snowboards' "
+        query += filterbrand(fcount,bcount,"brand = 'Jones_Snowboards'")
         fcount += 1
 
     if Gnu is not None:
-        if fcount > 0:
-            if bcount == 1:
-                query += "AND "
-        if fcount > 0:
-            if bcount >1:
-                query += "OR "
-        query += "brand = 'Gnu'"
+        query += filterbrand(fcount,bcount,"brand = 'Gnu'")
         fcount += 1
 
     if bcount >1:
@@ -303,7 +282,7 @@ def gear_snowbaord():
 
 # colorsssssssssssssssssssssss
 
-    lcount = 0 # counting how many color have been put into the query
+    fcount = 0 # counting how many color have been put into the query
 
     if bcount >= 1:
         if ccount > 1:
@@ -315,84 +294,42 @@ def gear_snowbaord():
 
 
     if yellow is not None: # checking weather form is empty or not
-        if bcount >= 1: # if there is a brand entered
-            if ccount == 1: # if there is only one color
-                    query += "AND " # add filter
-        if lcount > 0: # see if any color have already been put into the query
-            if ccount > 1: # checking if there is more than one color
-                query += "OR " # add filter
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =1) " # add filter
-        lcount += 1 # plus the amount of colors in the query
+        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =1) ")
+        lcount+=1
 
     if blue is not None:
-        if bcount >= 1:
-            if ccount == 1:
-                    query += "AND "
-        if lcount > 0:
-            if ccount > 1:
-                query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =2) "
-        lcount += 1
+        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =2) ")
+        lcount+=1
+
 
     if orange is not None:
-        if bcount >= 1:
-            if ccount == 1:
-                query += "AND "
-        if lcount > 0:
-            if lcount > 1:
-                query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =7) "
-        fcount += 1
+        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =7) ")
+        lcount+=1
 
     if pink is not None:
-        if bcount >= 1:
-            if ccount == 1:
-                query += "AND "
-        if lcount > 0:
-            if ccount > 1:
-                query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =8) "
-        lcount += 1
+        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =8) ")
+        lcount+=1
+
 
     if other is not None:
-        if bcount >= 1:
-            if ccount == 1:
-                query += "AND "
-        if lcount > 0:
-            if ccount > 1:
-                query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =3) "
-        lcount += 1
+        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =3) ")
+        lcount+=1
+
 
     if white is not None:
-        if bcount >= 1:
-            if ccount == 1:
-                query += "AND "
-        if lcount > 0:
-            if ccount > 1:
-                query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =4) "
-        lcount += 1
+        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =4) ")
+        lcount+=1
+
 
     if black is not None:
-        if bcount >= 1:
-            if ccount == 1:
-                query += "AND "
-        if lcount > 0:
-            if ccount > 1:
-                query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =5) "
-        lcount += 1
+        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =5) ")
+        lcount+=1
+
 
     if red is not None:
-        if bcount >= 1:
-            if ccount == 1:
-                query += "AND "
-        if lcount > 0:
-            if ccount > 1:
-                query += "OR "
-        query += "id =(select snowbaord_id from snowbaord_colour where colour_id =6) "
-        lcount += 1
+        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =6) ")
+        lcount+=1
+
 
     if ccount > 1:
         query += ")"
@@ -407,54 +344,24 @@ def gear_snowbaord():
                 query += "AND ("
 
     if one_forty is not None: # checking if the form is empty
-        if bcount or ccount >= 1:
-            if scount == 1: # seeing if and is neccary with no brakets
-                query += " AND " # Add Filter
-        if gcount > 0: # if more than one size has been added to the query
-            if scount > 1: # checking if ther has been more than filter for size
-                query += "OR " # Add Filter
-        query += "size = 140 " # Add Filter
-        gcount += 1
+        query += filtersize(bcount,ccount,scount,gcount,"size = 140 " )
+        gcount +=1
 
     if one_forty_two is not None:
-        if bcount or ccount >= 1:
-            if scount == 1:
-                query += " AND "
-        if gcount > 0:
-            if scount > 1:
-                query += "OR "
-        query += "size = 142 "
-        gcount += 1
+        query += filtersize(bcount,ccount,scount,gcount,"size = 142 " )
+        gcount +=1
 
     if one_forty_four is not None:
-        if bcount or ccount >= 1:
-            if scount == 1:
-                query += " AND "
-        if gcount > 0:
-            if scount > 1:
-                query += "OR "
-        query += "size = 144 "
-        gcount += 1
+        query += filtersize(bcount,ccount,scount,gcount,"size = 144 " )
+        gcount +=1
 
     if one_forty_six is not None:
-        if bcount or ccount >= 1:
-            if scount == 1:
-                query += " AND "
-        if gcount > 0:
-            if scount > 1:
-                query += "OR "
-        query += "size = 146 "
-        gcount += 1
+        query += filtersize(bcount,ccount,scount,gcount,"size = 146 " )
+        gcount +=1
 
     if one_forty_eight is not None:
-        if bcount or ccount >= 1:
-            if scount == 1:
-                query += " AND "
-        if gcount > 0:
-            if scount > 1:
-                query += "OR "
-        query += "size = 148 "
-        gcount += 1
+        query += filtersize(bcount,ccount,scount,gcount,"size = 148 " )
+        gcount +=1
 
     if bcount or ccount >= 1:
         if scount >1:
@@ -468,9 +375,9 @@ def gear_snowbaord():
             query += " AND "
 
     if g600 is not None: # checking if its not none
-        if kcount == 0: # checking that no other bigger filter have been aplied
-            query += "price >= 600" # add filter
-            kcount += 1 # showing that a filter has already beeen added
+        query += filterprice(bcount,ccount,scount,gcount,"price > 600")
+        gcount += 1
+
 
     if g600 is None:
         if l600 is not None:
@@ -531,11 +438,7 @@ def gear_snowbaord():
 @app.route("/gear_clothes", methods = ['POST', 'GET'])
 def gear_clothes():
 
-    conn = sqlite3.connect("snowbaord.db")
-    c = conn.cursor()
-    c.execute("select * from clothes where id >= 1")
-    result = c.fetchall()
-    conn.close()
+    result = database("select * from clothes where id >= 1")
 
     if request.method == 'POST' and "search_bar" in request.form:
         search = request.form['search_bar']
@@ -606,8 +509,10 @@ def forms_post():
 
         conn = sqlite3.connect("snowbaord.db")
         c = conn.cursor()
-        c.execute("INSERT INTO formpost post VALUES ?",(blogpost,))
-        result = c.fetchall()
+        sql = "INSERT INTO formpost (post, test) VALUES (?, ?)"
+        val = (blogpost, "11")
+        c.execute(sql, val)
+        conn.commit()
         conn.close()
 
         stat = "added"
