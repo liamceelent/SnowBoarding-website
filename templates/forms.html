@@ -2,10 +2,21 @@
 
 {% block content %}
 
-<form method="POST">
-  <textarea name = "blogpost" rows="4" cols="50"></textarea>
-  <input type="submit" value="Submit">
-</form>
+<div class = "posts_add_container"
+  <form method="POST">
+    <textarea name = "blogpost" rows="4" cols="50" value =  None ></textarea>
+    <input type="submit" value="Submit">
+  </form>
+</div>
 
+{% for blog in post %}
+
+<div class = "form_posts_container">
+  {{blog}}
+</div>
+{% endfor %}
 {{stat}}
+
+
+
 {% endblock %}

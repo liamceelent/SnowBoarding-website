@@ -498,28 +498,34 @@ def people():
 
 
 @app.route("/forms")
-def event():
+def forms():
     return render_template('forms.html')
 
-@app.route("/forms", methods=['POST'])
+@app.route("/forms", methods = ['POST', 'GET'])
 def forms_post():
+
+    conn = sqlite3.connect("snowbaord.db")
+    c = conn.cursor()
+    c.execute("select * from formpost")
+    post = c.fetchall()
+    conn.close()
 
     if request.method == 'POST' and "blogpost" in request.form:
         blogpost = request.form['blogpost']
 
         conn = sqlite3.connect("snowbaord.db")
         c = conn.cursor()
-        sql = "INSERT INTO formpost (post, test) VALUES (?, ?)"
-        val = (blogpost, "11")
+        sql = "INSERT INTO formpost (post, user, test) VALUES (?, ?, ?)"
+        val = (blogpost, session['username'], "11")
         c.execute(sql, val)
         conn.commit()
         conn.close()
-
         stat = "added"
 
-        return render_template('forms.html', stat=stat)
+        return render_template('forms.html', stat=stat, post = post)
 
-    return render_template('forms.html')
+
+    return render_template('forms.html', post = post)
 
 
 @app.route("/guide")
