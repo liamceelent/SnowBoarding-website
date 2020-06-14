@@ -352,14 +352,12 @@ def forms_create_post():
     c.execute(sql, val)
     conn.commit()
 
-    c.execute("select post_amt from user where name =?",(session['username'],))
+    c.execute("select post from user where name =?",(session['username'],))
     amt = c.fetchall()
     b = amt[0][0]
     b += 1
 
-    sql = "INSERT INTO user (user, post) VALUES (?,)" #this query need to be update
-    val = (b)
-    c.execute(sql, val)
+    c.execute("update user set post = ? where name = ?", (b, session['username']))
     conn.commit()
 
     conn.close()
