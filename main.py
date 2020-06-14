@@ -3,7 +3,7 @@ import sqlite3
 from func import database, filterbrand, filtercolor, filtersize
 import os
 import hashlib
-
+import datetime
 
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ app.config['SECRET_KEY'] = 'super secret key'
 
 @app.route("/")
 def home():
-    if 'username' in session:
+    if "username" in session:
         stat = "you are logged in as", session['username']
         return render_template('home.html', stat = stat)
     else:
@@ -71,8 +71,7 @@ def create_acc():
             key = result[0][1]
             new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
             if key == new_key:
-                session['key_name'] = 123312
-                session['username'] = name
+                session["username"] = name
                 return redirect(url_for("home"))
             else:
                 stat = "wrong user name mate"
@@ -103,11 +102,9 @@ def create_acc():
 
 @app.route("/gear", methods = ['POST', 'GET'])
 def gear_page():
-    if 'key_name' in session:
-        session_var = session['key_name']
-        return render_template('gear.html')
-    else:
-        return render_template('home.html')
+
+    return render_template('gear.html')
+
 
 
 
@@ -125,6 +122,7 @@ def gear_snowbinding():
 
     if request.method == 'POST' and "search_bar" in request.form:
         search = request.form['search_bar']
+
         conn = sqlite3.connect("snowbaord.db")
         c = conn.cursor()
         c.execute("select * from snowbinding where name LIKE '%"+ search +"%'")
@@ -282,7 +280,7 @@ def gear_snowbaord():
 
 # colorsssssssssssssssssssssss
 
-    fcount = 0 # counting how many color have been put into the query
+    lcount = 0 # counting how many color have been put into the query
 
     if bcount >= 1:
         if ccount > 1:
@@ -499,34 +497,112 @@ def people():
 
 @app.route("/forms")
 def forms():
-    return render_template('forms.html')
-
-@app.route("/forms", methods = ['POST', 'GET'])
-def forms_post():
 
     conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
     c.execute("select * from formpost")
-    post = c.fetchall()
+    result = c.fetchall()
     conn.close()
 
-    if request.method == 'POST' and "blogpost" in request.form:
-        blogpost = request.form['blogpost']
+    conn = sqlite3.connect("snowbaord.db")
+    c = conn.cursor()
+    c.execute("select * from user where name =?",(session['username'],))
+    personal_stat = c.fetchall()
+    conn.close()
 
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        sql = "INSERT INTO formpost (post, user, test) VALUES (?, ?, ?)"
-        val = (blogpost, session['username'], "11")
-        c.execute(sql, val)
-        conn.commit()
-        conn.close()
-        stat = "added"
+    return render_template('forms.html', result = result, stat = personal_stat)
 
-        return render_template('forms.html', stat=stat, post = post)
+@app.route("/forms", methods = ['POST', 'GET'])
+def forms_post():
+    content = None
+    title = None
+    if request.method == 'POST' and "title" in request.form:
+        title = request.form['title']
+
+    if request.method == 'POST' and "content" in request.form:
+        content = request.form['content']
+
+    search = request.form['search_form']
+
+    if title is None:
+        if content is None:
+            conn = sqlite3.connect("snowbaord.db")
+            c = conn.cursor()
+            c.execute("select * from formpost where post LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
+            result = c.fetchall() ## this wil lcause duping posts pls fix
+            c.execute("select * from formpost where title LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
+            result = result + c.fetchall() ## this wil lcause duping posts pls fix
+            conn.close()
+
+    if title is None:
+        if content is not None:
+            conn = sqlite3.connect("snowbaord.db")
+            c = conn.cursor()
+            c.execute("select * from formpost where post LIKE '%"+ search +"%'")
+            result = c.fetchall()
+            conn.close()
+
+    if title is not  None:
+        if content is None:
+            conn = sqlite3.connect("snowbaord.db")
+            c = conn.cursor()
+            c.execute("select * from formpost where title LIKE '%"+ search +"%'")
+            result = c.fetchall()
+            conn.close()
+
+    if title is not None:
+        if content is not None:
+            conn = sqlite3.connect("snowbaord.db")
+            c = conn.cursor()
+            c.execute("select * from formpost where post LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
+            result = c.fetchall() ## this wil lcause duping posts pls fix
+            c.execute("select * from formpost where title LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
+            result = result + c.fetchall() ## this wil lcause duping posts pls fix
+            conn.close()
+
+    conn = sqlite3.connect("snowbaord.db")
+    c = conn.cursor()
+    c.execute("select * from user where name =?",(session['username'],))
+    personal_stat = c.fetchall()
+    conn.close()
 
 
-    return render_template('forms.html', post = post)
 
+    return render_template('forms.html', user = session['username'], stat = personal_stat, result = result)
+
+@app.route("/forms/create")
+def forms_create():
+    return render_template('create_post.html')
+
+
+@app.route("/forms/create", methods = ['POST', 'GET'])
+def forms_create_post():
+    title = request.form['title']
+    content = request.form['content']
+    user = session["username"]
+    time = datetime.datetime.now()
+
+    conn = sqlite3.connect("snowbaord.db")
+    c = conn.cursor()
+    sql = "INSERT INTO formpost (user, post, title, time) VALUES (?, ?, ?, ?)"
+    val = (session['username'], content, title, time)
+    c.execute(sql, val)
+    conn.commit()
+
+    c.execute("select post_amt from user where name =?",(session['username'],))
+    amt = c.fetchall()
+    b = amt[0][0]
+    b += 1
+
+    sql = "INSERT INTO user (user, post) VALUES (?,)" #this query need to be update
+    val = (b)
+    c.execute(sql, val)
+    conn.commit()
+
+    conn.close()
+    stat = b
+
+    return render_template('create_post.html',stat = stat)
 
 @app.route("/guide")
 def guide():

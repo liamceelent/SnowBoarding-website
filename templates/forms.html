@@ -2,21 +2,80 @@
 
 {% block content %}
 
-<div class = "posts_add_container"
-  <form method="POST">
-    <textarea name = "blogpost" rows="4" cols="50" value =  None ></textarea>
-    <input type="submit" value="Submit">
-  </form>
+
+<div class = "left">
+
+  <div class = "user_stats">
+    <h1> {{stat[0][2]}} stats </h1>
+    {{stat[0][2]}}
+    {{stat[0][3]}}
+  </div>
+  <div class = "top_posters">
+    <h1> top posters </h1>
+  </div>
+
 </div>
 
-{% for blog in post %}
+<div class = "center">
 
-<div class = "form_posts_container">
-  {{blog}}
+  <div class = "search_form">
+    <form method="POST">
+      <input name="search_form">
+
+      <input type = "checkbox" name ="title">
+      <label for="title">title</label>
+
+
+      <input type = "checkbox" name ="content">
+      <label for="content"> content</label>
+
+      <button type="submit" >filter</button>
+
+    </form>
+
+  </div>
+  <a href="/forms/create"> create a blog</a>
+
+
+  <div class="posts">
+
+
+    {% for post in result %}
+
+    <div class = "post_container">
+      <div class = "post_title">
+        title: {{post[3]}}
+      </div>
+      <div class = "post_by">
+        by {{post[1]}}
+      </div>
+      <div class = "post_core">
+        {{post[2]}}
+      </div>
+      <div class = "post_votes">
+      </div>
+      <div class = "post_comments">
+      </div>
+    </div>
+
+    {% endfor %}
+
+  </div>
+
 </div>
-{% endfor %}
-{{stat}}
 
+
+<div class = "right">
+
+  <div class = "top_posts">
+    <h1> top posts </h1>
+  </div>
+
+  <div class = "bottom_posts">
+    <h1> worst posts </h1>
+  </div>
+
+</div>
 
 
 {% endblock %}

@@ -57,11 +57,11 @@ p {
   margin:0%;
   float: left;
   z-index: 1;
-  margin-right: 88%;
+  margin-right: 87.5%;
 }
 
 .menu_btn{
-  margin-top: 7.5px;
+  margin-top: 5%;
   font-size: 200%;
   padding: 10px;
   background-color: white;
@@ -70,7 +70,7 @@ p {
   transition: 0.3s;
   font-family: 'Roboto';
   border: 5px solid black;
-  height:75px;
+  height:90%;
 }
 
 .menu_items{
@@ -88,7 +88,7 @@ p {
   text-decoration: none;
   display: block;
   font-family: 'Roboto';
-  font-size: 30px;
+  font-size: 20px;
 }
 
 /* menu bar hover css */
@@ -599,7 +599,7 @@ cssssssssssssssssssssssssss
 /*
 
 
-eventtttttttttttttttttt
+formmmmmmmmmmmm
 
 cssssssssssssssssssssssssss
 
@@ -607,7 +607,137 @@ cssssssssssssssssssssssssss
 */
 
 
+.posts_add_container{
+  text-align: center;
+}
 
+.left{
+  width: 25%;
+  height:100%;
+  float: left;
+}
+
+.center{
+  width: 49%;
+  height:100%;
+  float: left;
+  text-align: center;
+}
+
+.right{
+  width: 25%;
+  height:100%;
+  float: left;
+}
+.user_stats{
+  margin: 3% 0 0 5%;
+  height:40%;
+  width:95%;
+  border-style: solid;
+  float: left;
+}
+
+.search_form{
+  margin: 3% 1% 0 4%;
+  width:95%;
+  height:5%;
+  border-style: solid;
+  float: left;
+}
+
+.search_form form{
+  margin:1%;
+  width:95%;
+  height:5%;
+  float: left;
+}
+
+.posts{
+  margin: 3% 1% 0% 4%;
+
+  width:95%;
+  border-style: solid;
+  float: left;
+  display: flex;
+  flex-direction: column;
+}
+.top_posts{
+  margin: 3% 0 0 5%;
+  height:40%;
+  width:95%;
+  border-style: solid;
+  float: left;
+}
+
+.top_posters{
+  margin: 3% 0 0 5%;
+  height:40%;
+  width:95%;
+  border-style: solid;
+  float: left;
+}
+
+.bottom_posts{
+  margin: 3% 0 0 5%;
+  height:40%;
+  width:95%;
+  border-style: solid;
+  float: left;
+}
+
+.post_container{
+  width: 90%;
+  max-width: 90%;
+  border-style: solid;
+  height:100px;
+  text-align: center;
+  margin: 5% 0 1% 5%;
+
+}
+
+.post_title{
+  border-bottom-style: solid;
+  width: 100%;
+}
+
+.post_by{
+  width:100%;
+  float: left;
+}
+
+.post_core{
+  width:100%;
+  float: left;
+  height:100px;
+}
+
+.splitter{
+  height: 100px;
+  width: 100%;
+}
+/* create post csss */
+
+.create_post_container{
+  border-style: solid;
+  margin: auto;
+  width: 60%;
+  height: 50%;
+}
+
+.pusher{
+  margin-top: 5%;
+  min-height: 100%;
+}
+
+.post_title_create{
+  text-align: center;
+}
+
+
+.post_submit{
+  text-align: center;
+  margin: 3% 0 0 0;
+}
 footer p{
   color: pink;
   width:100%;
@@ -616,5 +746,6 @@ footer p{
   background-color: #004e74;
   margin: 0px;
   height:5%;
+
   font-size: 100%;
 }
