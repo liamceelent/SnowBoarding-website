@@ -4,6 +4,7 @@
   <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
    <link rel="stylesheet" href="{{ url_for('static', filename='css/css.css') }}">
+   <script src="static/script/script.js"></script>
   </head>
   <body>
 
@@ -28,6 +29,15 @@
       </div>
 
     </div>
+
     {{stat}}
+    <div class = "logout">
+      <button onclick = "logout()" >logout</button>
+    </div>
+
+    <div class = "back">
+      <button onclick="goBack()">Go Back</button>
+    </div>
+
   </body>
 </html>

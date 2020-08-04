@@ -5,15 +5,35 @@
 
 <div class = "left">
 
-  <div class = "user_stats">
-    <h1> {{stat[0][2]}} stats </h1>
-    {{stat[0][2]}}
-    {{stat[0][3]}}
-  </div>
-  <div class = "top_posters">
-    <h1> top posters </h1>
-  </div>
+  {% if session['username'] != "guest" %}
+    <div class = "user_stats">
+      <h1> {{stat[0][2]}} stats </h1>
+      {{stat[0][2]}}
+      {{stat[0][3]}}
+    </div>
+  {% endif %}
 
+  {% if session['username'] == "guest" %}
+    <div class = "user_stats">
+      <h1> stats </h1>
+      please login to show stats
+    </div>
+  {% endif %}
+
+  <div class = "top_posters">
+    <h1> most times posted </h1>
+    <p>first: {{top_posters[0]}} </p>
+    <p>second: {{top_posters[1]}} </p>
+    <p>third: {{top_posters[2]}} </p>
+    <p>fourth: {{top_posters[3]}} </p>
+    <p>fifth: {{top_posters[4]}} </p>
+    <p>sixst: {{top_posters[5]}} </p>
+    <p>seventh: {{top_posters[6]}} </p>
+    <p>eighteh: {{top_posters[7]}} </p>
+    <p>ninth: {{top_posters[8]}} </p>
+    <p>tenth: {{top_posters[9]}} </p>
+
+  </div>
 </div>
 
 <div class = "center">
@@ -50,7 +70,7 @@
         by {{post[1]}}
       </div>
       <div class = "post_core">
-        {{post[2]}}
+        <p>{{post[2]}}</p>
       </div>
       <div class = "post_votes">
       </div>
@@ -68,11 +88,31 @@
 <div class = "right">
 
   <div class = "top_posts">
-    <h1> top posts </h1>
+    <h1> most liked posts </h1>
+    <p>1: {{best_posts[0]}} </p>
+    <p>2: {{best_posts[1]}} </p>
+    <p>3: {{best_posts[2]}} </p>
+    <p>4: {{best_posts[3]}} </p>
+    <p>5: {{best_posts[4]}} </p>
+    <p>6: {{best_posts[5]}} </p>
+    <p>7: {{best_posts[6]}} </p>
+    <p>8: {{best_posts[7]}} </p>
+    <p>9: {{best_posts[8]}} </p>
+    <p>10: {{best_posts[9]}} </p>
   </div>
 
   <div class = "bottom_posts">
-    <h1> worst posts </h1>
+    <h1> most dislkied posts</h1>
+    <p>1: {{worst_posts[0]}} </p>
+    <p>2: {{worst_posts[1]}} </p>
+    <p>3: {{worst_posts[2]}} </p>
+    <p>4: {{worst_posts[3]}} </p>
+    <p>5: {{worst_posts[4]}} </p>
+    <p>6: {{worst_posts[5]}} </p>
+    <p>7: {{worst_posts[6]}} </p>
+    <p>8: {{worst_posts[7]}} </p>
+    <p>9: {{worst_posts[8]}} </p>
+    <p>10: {{worst_posts[9]}} </p>
   </div>
 
 </div>

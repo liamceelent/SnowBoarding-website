@@ -10,13 +10,13 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'super secret key'
 
-
 @app.route("/")
 def home():
     if "username" in session:
         stat = "you are logged in as", session['username']
         return render_template('home.html', stat = stat)
     else:
+        session['username'] = "guest"
         return render_template('home.html')
 
 @app.route("/login")
@@ -273,12 +273,32 @@ def forms():
     personal_stat = c.fetchall()
     conn.close()
 
-    return render_template('forms.html', result = result, stat = personal_stat)
+    conn = sqlite3.connect("snowbaord.db") # shorten
+    c = conn.cursor()
+    c.execute("SELECT user,dislikes FROM formpost ORDER BY dislikes DESC LIMIT 10")
+    worst_posts = c.fetchall()
+    conn.close()
+
+    conn = sqlite3.connect("snowbaord.db") # shorten
+    c = conn.cursor()
+    c.execute("SELECT user,likes FROM formpost ORDER BY likes DESC LIMIT 10")
+    best_posts = c.fetchall()
+    conn.close()
+
+    conn = sqlite3.connect("snowbaord.db") # shorten
+    c = conn.cursor()
+    c.execute("SELECT name,post FROM user ORDER BY post DESC LIMIT 10")
+    top_posters = c.fetchall()
+    conn.close()
+
+    return render_template('forms.html', result = result, stat = personal_stat,top_posters = top_posters, worst_posts = worst_posts,best_posts = best_posts )
 
 @app.route("/forms", methods = ['POST', 'GET'])
 def forms_post():
+
     content = None
     title = None
+
     if request.method == 'POST' and "title" in request.form:
         title = request.form['title']
 
@@ -291,10 +311,8 @@ def forms_post():
         if content is None:
             conn = sqlite3.connect("snowbaord.db")
             c = conn.cursor()
-            c.execute("select * from formpost where post LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
-            result = c.fetchall() ## this wil lcause duping posts pls fix
-            c.execute("select * from formpost where title LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
-            result = result + c.fetchall() ## this wil lcause duping posts pls fix
+            c.execute("select * from formpost where post LIKE '%"+ search +"%' or title like '%"+ search +"%'")
+            result = c.fetchall()
             conn.close()
 
     if title is None:# shorten
@@ -317,10 +335,8 @@ def forms_post():
         if content is not None:
             conn = sqlite3.connect("snowbaord.db")
             c = conn.cursor()
-            c.execute("select * from formpost where post LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
-            result = c.fetchall() ## this wil lcause duping posts pls fix
-            c.execute("select * from formpost where title LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
-            result = result + c.fetchall() ## this wil lcause duping posts pls fix
+            c.execute("select * from formpost where post LIKE '%"+ search +"%' or title like '%"+ search +"%'")
+            result = c.fetchall()
             conn.close()
 
     conn = sqlite3.connect("snowbaord.db") # shorten
@@ -328,7 +344,6 @@ def forms_post():
     c.execute("select * from user where name =?",(session['username'],))
     personal_stat = c.fetchall()
     conn.close()
-
 
 
     return render_template('forms.html', user = session['username'], stat = personal_stat, result = result)
@@ -340,26 +355,30 @@ def forms_create():
 
 @app.route("/forms/create", methods = ['POST', 'GET'])
 def forms_create_post():
+
     title = request.form['title']
     content = request.form['content']
     user = session["username"]
     time = datetime.datetime.now()
 
-    conn = sqlite3.connect("snowbaord.db") # shorten
+    conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
     sql = "INSERT INTO formpost (user, post, title, time) VALUES (?, ?, ?, ?)"
     val = (session['username'], content, title, time)
     c.execute(sql, val)
     conn.commit()
+    conn.close()
 
-    c.execute("select post_amt from user where name =?",(session['username'],))
+    conn = sqlite3.connect("snowbaord.db")
+    c = conn.cursor()
+    c.execute("select post from user where name =?",(session['username'],))
     amt = c.fetchall()
     b = amt[0][0]
     b += 1
 
-    sql = "INSERT INTO user (user, post) VALUES (?,)" #this query need to be update
-    val = (b)
-    c.execute(sql, val)
+
+    sql = "UPDATE user set post = "+ str(b) + " where name = "+ session["username"]+""
+    c.execute(sql)
     conn.commit()
 
     conn.close()

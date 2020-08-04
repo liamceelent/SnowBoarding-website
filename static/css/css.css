@@ -709,8 +709,14 @@ cssssssssssssssssssssssssss
   width:100%;
   float: left;
   height:100px;
+  display: inline-flex;
+  flex-direction: row;
+  max-width: 100%;
 }
 
+.post_core p{
+  max-width: 100%;
+}
 .splitter{
   height: 100px;
   width: 100%;
@@ -738,6 +744,12 @@ cssssssssssssssssssssssssss
   text-align: center;
   margin: 3% 0 0 0;
 }
+
+
+.post_votes{
+  border-style: solid;
+}
+
 footer p{
   color: pink;
   width:100%;
@@ -746,6 +758,9 @@ footer p{
   background-color: #004e74;
   margin: 0px;
   height:5%;
+  position: fixed;
+
+  bottom: 0;
 
   font-size: 100%;
 }
