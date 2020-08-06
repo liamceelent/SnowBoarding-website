@@ -10,14 +10,14 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'super secret key'
 
+
 @app.route("/")
 def home():
     if "username" in session:
-        stat = "you are logged in as", session['username']
-        return render_template('home.html', stat = stat)
+        loggedstat = "you are logged in as", session['username']
+        return render_template('home.html', loggedstat = loggedstat) #home page if logged in
     else:
-        session['username'] = "guest"
-        return render_template('home.html')
+        return render_template('home.html') #home page if not logged in
 
 @app.route("/login")
 def login():
@@ -46,8 +46,7 @@ def create_acc():
         c = conn.cursor()
         c.execute(query, brand)
         conn.commit()
-        conn.close()
-        print(query,brand)
+        conn.close() # creating a account
 
         return render_template('login.html')
 
@@ -59,7 +58,7 @@ def create_acc():
         conn = sqlite3.connect("snowbaord.db")
         c = conn.cursor()
         c.execute("select salt, key from user where name = ?",(name,))
-        result = c.fetchall()
+        result = c.fetchall() # retreiving password and username for login
         conn.close()
         print(result)
 
@@ -70,67 +69,30 @@ def create_acc():
             salt = result[0][0]
             key = result[0][1]
             new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-            if key == new_key:
-                session["username"] = name
+            if key == new_key: # seeing if they match
+                session["username"] = name # setting sesion username
                 return redirect(url_for("home"))
             else:
                 stat = "wrong user name mate"
                 return render_template('login.html', stat=stat)
-
-    if request.method == 'POST' and "name" in request.form:
-
-        name = request.form['name']
-        password = request.form['pass']
-
-        a = User.query.filter_by(name=name).first()
-        if a is not None:
-            salt = a.salt
-            key = a.key
-            new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-            if key == new_key:
-                return redirect(url_for("home"))
-
-            else:
-                stat = "wrong user name mate"
-                return render_template('login.html', stat=stat)
-        else:
-            stat = "wrong user name mate"
-            return render_template('login.html', stat=stat)
-
-
-
 
 @app.route("/gear", methods = ['POST', 'GET'])
 def gear_page():
 
     return render_template('gear.html')
 
-
-
-
-
-
 @app.route("/gear_snowbinding", methods = ['POST', 'GET'])
 def gear_snowbinding():
 
-    conn = sqlite3.connect("snowbaord.db")
-    c = conn.cursor()
-    c.execute("select * from snowbinding where id >= 1")
-    result = c.fetchall()
-    conn.close()
-    # search bar for snwobinding
+    snowbinding_r = database("select * from snowbinding where id >= 1") # r stands for result
 
     if request.method == 'POST' and "search_bar" in request.form:
-        search = request.form['search_bar']
+        search_snowbinding = request.form['search_bar']
 
-        conn = sqlite3.connect("snowbaord.db")
-        c = conn.cursor()
-        c.execute("select * from snowbinding where name LIKE '%"+ search +"%'")
-        result = c.fetchall()
-
-        conn.close()
-        return render_template('gear_snowbinding.html', tests = result)
-    return render_template('gear_snowbinding.html', tests = result)
+        search_snowbinding_r = database("select * from snowbinding where name LIKE '%"+ search_snowbinding +"%'")
+        # search bar for snowbinding
+        return render_template('gear_snowbinding.html', snowbinding_r = search_snowbinding_r)
+    return render_template('gear_snowbinding.html', snowbinding_r = snowbinding_r)
 
 
 
@@ -140,7 +102,7 @@ def gear_snowbinding():
 @app.route("/gear_snowbaord", methods = ['POST', 'GET'])
 def gear_snowbaord():
 
-    search_bar = request.form.get('search_bar')
+    search_snowboard = request.form.get('search_bar')
 
     #brands request
 
@@ -179,21 +141,21 @@ def gear_snowbaord():
     g600 = request.form.get('600+')
 
     # search bar code
-    if search_bar is not None:
-        query = "select * from snowbaord where name LIKE '%"+ search_bar +"%'" # so anything that has a like term shows
-        result = database(query)
-        return render_template('gear_snowbaord.html', tests = result)
+    if search_snowboard is not None:
+        search_snowboard_r = database("select * from snowbaord where name LIKE '%"+ search_snowboard +"%'")
+        return render_template('gear_snowbaord.html', search_snowboard_r = search_snowboard_r)
 
     query = filtersnowbaord(Burton,Salomon,Lib_Tech,Jones_Snowboards,Gnu,blue,red,\
     orange,pink,white,black,yellow,other,one_forty,one_forty_two,one_forty_four,\
     one_forty_six,one_forty_eight,l200,l300,l400,l500,l600,g600)
 
-    conn = sqlite3.connect('snowbaord.db')# shorten
+    conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
     c.execute(query)
-    test = c.fetchall()
+    query_r = c.fetchall()
     conn.close()
-    return render_template("gear_snowbaord.html", tests = test)
+
+    return render_template("gear_snowbaord.html", search_snowboard_r = query_r)
 
 
 @app.route("/gear_clothes", methods = ['POST', 'GET'])
@@ -202,37 +164,27 @@ def gear_clothes():
     result = database("select * from clothes where id >= 1")
 
     if request.method == 'POST' and "search_bar" in request.form:
-        search = request.form['search_bar']
-        conn = sqlite3.connect("snowbaord.db")# shorten
-        c = conn.cursor()
-        c.execute("select * from clothes where name LIKE '%"+ search +"%'")
-        result = c.fetchall()
-        conn.close()
+        search_clothes = request.form['search_bar']
 
-        return render_template('gear_clothes.html', tests = result)
-    return render_template('gear_clothes.html', tests = result)
+        search_clothes_r  = database("select * from snowbinding where name LIKE '%"+ search_clothes +"%'")
+
+        return render_template('gear_clothes.html', clothes_r = search_clothes_r)
+    return render_template('gear_clothes.html', clothes_r = result)
 
 
 
 @app.route("/gear_snow_boots", methods = ['POST', 'GET'])
 def gear_snow_boots():
 
-    conn = sqlite3.connect("snowbaord.db")# shorten
-    c = conn.cursor()
-    c.execute("select * from snow_boots where id >= 1")
-    result = c.fetchall()
-    conn.close()
+    result = database("select * from snow_boots where id >= 1")
 
     if request.method == 'POST' and "search_bar" in request.form:
-        search = request.form['search_bar']
-        conn = sqlite3.connect("snowbaord.db")# shorten
-        c = conn.cursor()
-        c.execute("select * from snow_boots where name LIKE '%"+ search +"%'")
-        result = c.fetchall()
-        conn.close()
+        search_snowboots = request.form['search_bar']
 
-        return render_template('gear_snow_boots.html', tests = result)
-    return render_template('gear_snow_boots.html', tests = result)
+        search_snowboots_r = database("select * from snow_boots where name LIKE '%"+ search_snowboots +"%'")
+
+        return render_template('gear_snow_boots.html', snowboots = search_snowboots_r)
+    return render_template('gear_snow_boots.html', snowboots = result)
 
 
 @app.route("/gear_click")
@@ -273,32 +225,12 @@ def forms():
     personal_stat = c.fetchall()
     conn.close()
 
-    conn = sqlite3.connect("snowbaord.db") # shorten
-    c = conn.cursor()
-    c.execute("SELECT user,dislikes FROM formpost ORDER BY dislikes DESC LIMIT 10")
-    worst_posts = c.fetchall()
-    conn.close()
-
-    conn = sqlite3.connect("snowbaord.db") # shorten
-    c = conn.cursor()
-    c.execute("SELECT user,likes FROM formpost ORDER BY likes DESC LIMIT 10")
-    best_posts = c.fetchall()
-    conn.close()
-
-    conn = sqlite3.connect("snowbaord.db") # shorten
-    c = conn.cursor()
-    c.execute("SELECT name,post FROM user ORDER BY post DESC LIMIT 10")
-    top_posters = c.fetchall()
-    conn.close()
-
-    return render_template('forms.html', result = result, stat = personal_stat,top_posters = top_posters, worst_posts = worst_posts,best_posts = best_posts )
+    return render_template('forms.html', result = result, stat = personal_stat)
 
 @app.route("/forms", methods = ['POST', 'GET'])
 def forms_post():
-
     content = None
     title = None
-
     if request.method == 'POST' and "title" in request.form:
         title = request.form['title']
 
@@ -311,8 +243,10 @@ def forms_post():
         if content is None:
             conn = sqlite3.connect("snowbaord.db")
             c = conn.cursor()
-            c.execute("select * from formpost where post LIKE '%"+ search +"%' or title like '%"+ search +"%'")
-            result = c.fetchall()
+            c.execute("select * from formpost where post LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
+            result = c.fetchall() ## this wil lcause duping posts pls fix
+            c.execute("select * from formpost where title LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
+            result = result + c.fetchall() ## this wil lcause duping posts pls fix
             conn.close()
 
     if title is None:# shorten
@@ -335,8 +269,10 @@ def forms_post():
         if content is not None:
             conn = sqlite3.connect("snowbaord.db")
             c = conn.cursor()
-            c.execute("select * from formpost where post LIKE '%"+ search +"%' or title like '%"+ search +"%'")
-            result = c.fetchall()
+            c.execute("select * from formpost where post LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
+            result = c.fetchall() ## this wil lcause duping posts pls fix
+            c.execute("select * from formpost where title LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
+            result = result + c.fetchall() ## this wil lcause duping posts pls fix
             conn.close()
 
     conn = sqlite3.connect("snowbaord.db") # shorten
@@ -344,6 +280,7 @@ def forms_post():
     c.execute("select * from user where name =?",(session['username'],))
     personal_stat = c.fetchall()
     conn.close()
+
 
 
     return render_template('forms.html', user = session['username'], stat = personal_stat, result = result)
@@ -355,30 +292,24 @@ def forms_create():
 
 @app.route("/forms/create", methods = ['POST', 'GET'])
 def forms_create_post():
-
     title = request.form['title']
     content = request.form['content']
     user = session["username"]
     time = datetime.datetime.now()
 
-    conn = sqlite3.connect("snowbaord.db")
+    conn = sqlite3.connect("snowbaord.db") # shorten
     c = conn.cursor()
     sql = "INSERT INTO formpost (user, post, title, time) VALUES (?, ?, ?, ?)"
     val = (session['username'], content, title, time)
     c.execute(sql, val)
     conn.commit()
-    conn.close()
 
-    conn = sqlite3.connect("snowbaord.db")
-    c = conn.cursor()
     c.execute("select post from user where name =?",(session['username'],))
     amt = c.fetchall()
     b = amt[0][0]
     b += 1
 
-
-    sql = "UPDATE user set post = "+ str(b) + " where name = "+ session["username"]+""
-    c.execute(sql)
+    c.execute("update user set post = ? where name = ?", (b, session['username']))
     conn.commit()
 
     conn.close()
