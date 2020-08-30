@@ -46,7 +46,7 @@ def filtersize(bcount, ccount, scount, gcount, query) :
     queryadd  += query # Add Filter
 
     return(queryadd)
-    
+
 def filtersnowbaord(Burton,Salomon,Lib_Tech,Jones_Snowboards,Gnu,blue,red,\
 orange,pink,white,black,yellow,other,one_forty,one_forty_two,one_forty_four,\
 one_forty_six,one_forty_eight,l200,l300,l400,l500,l600,g600):
@@ -237,11 +237,6 @@ one_forty_six,one_forty_eight,l200,l300,l400,l500,l600,g600):
     if pcount > 0:
         if bcount or ccount or scount > 0:
             query += " AND "
-
-    if g600 is not None: # checking if its not none
-        query += filterprice(bcount,ccount,scount,gcount,"price > 600")
-        gcount += 1
-
 
     if g600 is None:
         if l600 is not None:

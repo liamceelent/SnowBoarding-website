@@ -2,117 +2,115 @@
 
 {% block content %}
 
+<div class = ""
+
+
+<h1> snowbaords </h1>
 <div class= "flex_container_gear">
   <div class = "search_gear_container">
     <div class = "search_bar_gear">
       <form method="POST">
-        <input name="search_bar">
+        <p> search</p><input name="search_bar">
       </form>
-    </div>
-
-    <div class = filter_gear>
-      <button class = "filter_btn">filter</button>
-        <div class="filter_gear_items">
-          <form method="POST">
-
-            <h1> colour </h1>
-
-            <input type = "checkbox" name ="yellow">
-            <label for="yellow">yellow</label>
-
-            <input type = "checkbox" name ="red">
-            <label for="red">red</label>
-
-            <input type = "checkbox" name ="blue">
-            <label for="blue">blue</label>
-
-            <input type = "checkbox" name ="white">
-            <label for="white">white</label>
-
-            <input type = "checkbox" name ="black">
-            <label for="black">black</label>
-
-            <input type = "checkbox" name ="pink">
-            <label for="pink">pink</label>
-
-            <input type = "checkbox" name ="orange">
-            <label for="orange">orange</label>
-
-            <input type = "checkbox" name ="other">
-            <label for="other">other</label>
-
-            <h1> size </h1>
-
-            <input type = "checkbox" name ="140">
-            <label for="140">140</label>
-
-            <input type = "checkbox" name ="142">
-            <label for="142">142</label>
-
-            <input type = "checkbox" name ="144">
-            <label for="144">144</label>
-
-            <input type = "checkbox" name ="146">
-            <label for="146">146</label>
-
-            <input type = "checkbox" name ="148">
-            <label for="148">148</label>
-
-            <h1> brand </h1>
-
-            <input type = "checkbox" name ="Burton">
-            <label for="Burton">Burton</label>
-
-            <input type = "checkbox" name ="Salomon">
-            <label for="Salomon">Salomon</label>
-
-            <input type = "checkbox" name ="Lib_Tech">
-            <label for="Lib_Tech">Lib Tech</label>
-
-            <input type = "checkbox" name ="Jones_Snowboards">
-            <label for="Jones_Snowboards">Jones Snowboards</label>
-
-            <input type = "checkbox" name ="Gnu">
-            <label for="Gnu">Gnu</label>
-
-            <h1> price </h1>
-
-            <input type = "checkbox" name ="200">
-            <label for="200"><$200</label>
-
-            <input type = "checkbox" name ="300">
-            <label for="300"><$300</label>
-
-            <input type = "checkbox" name ="400">
-            <label for="400"><$400</label>
-
-            <input type = "checkbox" name ="500">
-            <label for="500"><$500</label>
-
-            <input type = "checkbox" name ="600">
-            <label for="600"><$600</label>
-
-            <input type = "checkbox" name ="600+">
-            <label for="600+">$600+</label>
-
-
-            <button type="submit" >filter</button>
-
-          </form>
-        </div>
     </div>
   </div>
 
+<div class = "filters">
+  <form method="POST">
+    <h1> filters </h1>
+    <p> colour </p>
+
+    <input type = "checkbox" name ="yellow">
+    <label for="yellow">yellow</label>
+
+    <input type = "checkbox" name ="red">
+    <label for="red">red</label>
+
+    <input type = "checkbox" name ="blue">
+    <label for="blue">blue</label>
+
+    <input type = "checkbox" name ="white">
+    <label for="white">white</label>
+
+    <input type = "checkbox" name ="black">
+    <label for="black">black</label>
+
+    <input type = "checkbox" name ="pink">
+    <label for="pink">pink</label>
+
+    <input type = "checkbox" name ="orange">
+    <label for="orange">orange</label>
+
+    <input type = "checkbox" name ="other">
+    <label for="other">other</label>
+
+    <p> size </p>
+
+    <input type = "checkbox" name ="140">
+    <label for="140">140</label>
+
+    <input type = "checkbox" name ="142">
+    <label for="142">142</label>
+
+    <input type = "checkbox" name ="144">
+    <label for="144">144</label>
+
+    <input type = "checkbox" name ="146">
+    <label for="146">146</label>
+
+    <input type = "checkbox" name ="148">
+    <label for="148">148</label>
+
+    <p> brand </p>
+
+    <input type = "checkbox" name ="Burton">
+    <label for="Burton">Burton</label>
+
+    <input type = "checkbox" name ="Salomon">
+    <label for="Salomon">Salomon</label>
+
+    <input type = "checkbox" name ="Lib_Tech">
+    <label for="Lib_Tech">Lib Tech</label>
+
+    <input type = "checkbox" name ="Jones_Snowboards">
+    <label for="Jones_Snowboards">Jones Snowboards</label>
+
+    <input type = "checkbox" name ="Gnu">
+    <label for="Gnu">Gnu</label>
+
+    <p> price </p>
+
+    <input type = "checkbox" name ="200">
+    <label for="200"><$200</label>
+
+    <input type = "checkbox" name ="300">
+    <label for="300"><$300</label>
+
+    <input type = "checkbox" name ="400">
+    <label for="400"><$400</label>
+
+    <input type = "checkbox" name ="500">
+    <label for="500"><$500</label>
+
+    <input type = "checkbox" name ="600">
+    <label for="600"><$600</label>
+
+
+
+    <button type="submit" >filter</button>
+
+    </form>
+
+</div>
+
   {% for post in search_snowboard_r %}
 
-  <a href="/gear_click?search_id={{post[1]}}&table={{post[2]}}" class = "gear_conatiner">
+  <a href="/gear_click?search_id={{post[0]}}&table={{post[2]}}" class = "gear_conatiner">
     <div class = "gear_img">
       <img src="/static/image/{{post[7]}}">
     </div>
     <div class="gear_name">
-      <form method = "POST">
-        <input type="text" name = "gear_individual" value = "{{post[1]}}">
-      </form>
+      <p> {{post[1]}} </p>
     </div>
   </a>
 

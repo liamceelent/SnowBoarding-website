@@ -129,7 +129,7 @@ cssssssssssssssssssssssssss
   height: 100%;
   background-size: cover;
   background-position: center;
-  display: none;
+
 }
 
 .home_text_desktop p{
@@ -139,96 +139,6 @@ cssssssssssssssssssssssssss
     -webkit-animation: fadein 4s;
     width: 60vw;
     font-family: 'Roboto';
-    display: none;
-}
-/* home menu for the width of a ipad */
-.home_text_ipad {
-  display: none;
-  height:40%;
-  font-size: 70px;
-  padding-top: 10%;
-  font-family: 'Roboto';
-}
-
-.homeimg_ipad{
-  display: none;
-  background-image: url("/static/image/done.png");
-  width: 100%;
-  height: 50%;
-  background-repeat: no-repeat;
-  background-position:center;
-  background-size: cover;
-}
-
-/* home menu for the width of a desk */
-.home_text_phone{
-  display: block;
-  height: 20%;
-  font-size: 30px;
-  padding: 20% 20px 0px 40px;
-  font-family: 'Baloo Bhaina 2';
-}
-
-.img_phone{
-  display: block;
-  background-image: url("/static/image/iphone_home.jpg");
-  width: 100%;
-  height: 70%;
-  background-repeat: no-repeat;
-  background-position:center;
-  background-size: cover;
-}
-/* scaling for ipad */
-@media only screen and (min-width: 768px) {
-
-  .home_text_phone{
-    display: none;
-  }
-  .img_phone{
-    display: none;
-  }
-
-  .home_text_ipad{
-    display: block;
-  }
-
-  .homeimg_ipad{
-    display: block;
-  }
-
-  .homeimg_desktop{
-    display: none;
-  }
-
-  .home_text_desktop p{
-    display: none;
-  }
-}
-/* scaling for pc */
-@media only screen and (min-width: 1000px) {
-
-  .home_text_phone{
-    display: none;
-  }
-  .img_phone{
-    display: none;
-  }
-
-  .home_text_ipad{
-    display: none;
-  }
-
-  .homeimg_ipad{
-    display: none;
-  }
-
-  .homeimg_desktop{
-    display: block;
-  }
-
-  .home_text_desktop p{
-    display: block;
-  }
 
 }
 
@@ -341,10 +251,7 @@ cssssssssssssssssssssssssss
 .create_box{
   padding: 1%;
   border: 2px solid grey;
-  margin-top:1%;
-  margin-bottom: 1%;
-  margin-right:5%;
-  margin-left:5%;
+  margin:10% 5% 10% 5%;
   display:flex;
 }
 
@@ -358,7 +265,14 @@ cssssssssssssssssssssssssss
 
 }
 
+.filler{
+  background-color: green;
+  height:40%;
+}
 
+.back{
+
+}
 
 /*
 
@@ -497,11 +411,14 @@ cssssssssssssssssssssssssss
   width: 100%;
 }
 
-
+.gear_name{
+  text-align: center;
+  color: black;
+}
 
 .search_gear_container{
   width:100%;
-  height:30%;
+  height:20%;
   float: left;
 }
 .filter_gear{
@@ -511,13 +428,13 @@ cssssssssssssssssssssssssss
   padding: 5% 0 0 0;
 }
 
-.filter_btn{
-  font-size: 200%;
-  padding: 10px;
-  background-color: #004e74;
-  border-width: 0;
-  color: #a86d4f;
-  transition: 0.3s;
+.filters{
+  float: left;
+  margin-left: 20%;
+  width: 60%;
+  text-align: center;
+  border-style: solid;
+  height: 30%;
 }
 
 

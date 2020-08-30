@@ -195,7 +195,7 @@ def gear_click():
 
     conn = sqlite3.connect("snowbaord.db")# shorten
     c = conn.cursor()
-    c.execute("select * from snowbaord where name = ?",(search_id,))
+    c.execute("select * from snowbaord where id = ?",(search_id,))
     result = c.fetchall()
     conn.close()
 
@@ -225,7 +225,14 @@ def forms():
     personal_stat = c.fetchall()
     conn.close()
 
-    return render_template('forms.html', result = result, stat = personal_stat)
+    conn = sqlite3.connect("snowbaord.db") # shorten
+    c = conn.cursor()
+    c.execute("select user,like from formpost ORDER BY like desc limit 10")
+    top_posters = c.fetchall()
+    print(top_posters)
+    conn.close()
+
+    return render_template('forms.html', result = result, stat = personal_stat, top_posters = top_posters)
 
 @app.route("/forms", methods = ['POST', 'GET'])
 def forms_post():
@@ -281,9 +288,16 @@ def forms_post():
     personal_stat = c.fetchall()
     conn.close()
 
+    conn = sqlite3.connect("snowbaord.db") # shorten
+    c = conn.cursor()
+    c.execute("select * from formpost ORDER BY like desc")
+    top_posters = c.fetchall()
+    print(top_posters)
+    conn.close()
 
 
-    return render_template('forms.html', user = session['username'], stat = personal_stat, result = result)
+
+    return render_template('forms.html', user = session['username'], stat = personal_stat, result = result, top_poster = top_posters,)
 
 @app.route("/forms/create")
 def forms_create():
