@@ -59,7 +59,7 @@
   <div class="posts">
 
 
-    {% for post in result %}
+    {% for post in all_forms %}
 
     <div class = "post_container">
       <div class = "post_title">
@@ -69,11 +69,13 @@
         by {{post[1]}}
       </div>
       <div class = "post_core">
-        <p>{{post[2]}}</p>
+        <span>{{post[2]}}</span>
       </div>
-      <div class = "post_votes">
+      <div class = "post_likes">
+        <p>{{post[5]}}</p>
       </div>
-      <div class = "post_comments">
+      <div class = "post_dislikes">
+        <p>{{post[6]}}</p>
       </div>
     </div>
 

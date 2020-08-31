@@ -282,26 +282,29 @@ cssssssssssssssssssssssssss
 
 
 */
-
-.people_title{
-  padding-top: 100px;
-  text-align: center;
-}
-
 .people_container{
-  border: 10px solid black;
+  background-image: url("/static/image_people/backgroundimg.jpg");
+  position: fixed;
+  width:100%;
+  height:100%;
+  background-repeat: no-repeat;
 }
 
-.people_writing{
-  width: 70%;
+.snowbaorder_img{
+  background-image: url("/static/image_people/snowboarder.png");
+  width:50%;
+  height:60%;
+  background-repeat: no-repeat;
   float: left;
 }
-.people_img img{
-  width: 30%;
-  float: left;
+
+.center_writing{
+  text-align: center;
+  width: 60%;
+  margin-left: 20%;
+  height: flex;
+  background-color: white;
 }
-
-
 /*
 
 gearrrrrrrrrrrrrrrrrrrrrrrrrr
@@ -437,52 +440,9 @@ cssssssssssssssssssssssssss
   height: 30%;
 }
 
-
-/* items in the filter dropdown menu */
-.filter_gear_items{
-  display: none;
-  position: absolute;
-  background-color: white;
-  width:100%;
-  height:100%;
-  opacity: 0.8;
-  z-index: 1;
-  float: left;
+.snowbaordtitle{
+  text-align: center;
 }
-
-.filter_gear_items a {
-  color: black;
-  padding: 0.2vw 0.2vw;
-  text-decoration: none;
-  display: block;
-  font-family: 'Baloo Bhaina 2';
-
-}
-
-.filter_gear:hover .filter_gear_items {
-  display: block;
-  color: black;
-  background-color: pink;
-}
-
-.filter_gear:hover .filter_btn {
-  opacity: 0.8;
-  cursor: pointer;
-}
-
-.filter_gear_items a:hover {
-  background-color: white;
-}
-
-.gearspec_container{
-  padding: 100px 0 0 0;
-}
-
-.flex_container_gear{
-  min-height: 100%;
-}
-
-
 /* gear inddivdual pages css */
 
 .gearspec_container{
@@ -606,10 +566,12 @@ cssssssssssssssssssssssssss
   width: 90%;
   max-width: 90%;
   border-style: solid;
-  height:100px;
+  height:20%;
   text-align: center;
   margin: 5% 0 1% 5%;
-
+  overflow: auto;
+  white-space: normal;
+  display: inline-block;
 }
 
 .post_title{

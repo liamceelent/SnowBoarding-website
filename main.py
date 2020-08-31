@@ -201,11 +201,11 @@ def gear_click():
 
     return render_template('gearspec.html', name = search_id, result = result, table= table)
 
+
+
 @app.route("/people")
 def people():
-    query = "select * from people where id >= 1"
-    result = database(query)
-    return render_template('people.html', results = result)
+    return render_template('people.html')
 
 
 
@@ -216,7 +216,7 @@ def forms():
     conn = sqlite3.connect("snowbaord.db")# shorten
     c = conn.cursor()
     c.execute("select * from formpost")
-    result = c.fetchall()
+    all_forms = c.fetchall()
     conn.close()
 
     conn = sqlite3.connect("snowbaord.db")# shorten
@@ -229,10 +229,9 @@ def forms():
     c = conn.cursor()
     c.execute("select user,like from formpost ORDER BY like desc limit 10")
     top_posters = c.fetchall()
-    print(top_posters)
     conn.close()
 
-    return render_template('forms.html', result = result, stat = personal_stat, top_posters = top_posters)
+    return render_template('forms.html', all_forms = all_forms, stat = personal_stat, top_posters = top_posters)
 
 @app.route("/forms", methods = ['POST', 'GET'])
 def forms_post():
@@ -250,10 +249,8 @@ def forms_post():
         if content is None:
             conn = sqlite3.connect("snowbaord.db")
             c = conn.cursor()
-            c.execute("select * from formpost where post LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
-            result = c.fetchall() ## this wil lcause duping posts pls fix
-            c.execute("select * from formpost where title LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
-            result = result + c.fetchall() ## this wil lcause duping posts pls fix
+            c.execute("select * from formpost where title LIKE '%"+ search +"%' OR post LIKE '%"+ search +"%'")
+            result = c.fetchall()
             conn.close()
 
     if title is None:# shorten
@@ -276,10 +273,8 @@ def forms_post():
         if content is not None:
             conn = sqlite3.connect("snowbaord.db")
             c = conn.cursor()
-            c.execute("select * from formpost where post LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
-            result = c.fetchall() ## this wil lcause duping posts pls fix
-            c.execute("select * from formpost where title LIKE '%"+ search +"%'") ## this wil lcause duping posts pls fix
-            result = result + c.fetchall() ## this wil lcause duping posts pls fix
+            c.execute("select * from formpost where title LIKE '%"+ search +"%' OR post LIKE '%"+ search +"%'")
+            result = c.fetchall()
             conn.close()
 
     conn = sqlite3.connect("snowbaord.db") # shorten
@@ -288,16 +283,14 @@ def forms_post():
     personal_stat = c.fetchall()
     conn.close()
 
+
     conn = sqlite3.connect("snowbaord.db") # shorten
     c = conn.cursor()
-    c.execute("select * from formpost ORDER BY like desc")
+    c.execute("select user,like from formpost ORDER BY like desc limit 10")
     top_posters = c.fetchall()
-    print(top_posters)
     conn.close()
 
-
-
-    return render_template('forms.html', user = session['username'], stat = personal_stat, result = result, top_poster = top_posters,)
+    return render_template('forms.html', user = session['username'], stat = personal_stat, all_forms = result, top_posters = top_posters,)
 
 @app.route("/forms/create")
 def forms_create():
