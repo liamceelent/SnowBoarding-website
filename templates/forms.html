@@ -2,100 +2,65 @@
 
 {% block content %}
 
+<div class = "background_forms">
+  <div class = "left">
 
-<div class = "left">
-
-  {% if session['username'] != "guest" %}
-    <div class = "user_stats">
-      <h1> {{stat[0][2]}} stats </h1>
-      {{stat[0][2]}}
-      {{stat[0][3]}}
-    </div>
-  {% endif %}
-
-  {% if session['username'] == "guest" %}
-    <div class = "user_stats">
-      <h1> stats </h1>
-      please login to show stats
-    </div>
-  {% endif %}
-
-    <div class = "top_posters">
-      <h1> most times posted </h1>
-      <p>first: {{top_posters[0]}} </p>
-      <p>second: {{top_posters[1]}} </p>
-      <p>third: {{top_posters[2]}} </p>
-      <p>fourth: {{top_posters[3]}} </p>
-      <p>fifth: {{top_posters[4]}} </p>
-      <p>sixst: {{top_posters[5]}} </p>
-      <p>seventh: {{top_posters[6]}} </p>
-      <p>eighteh: {{top_posters[7]}} </p>
-      <p>ninth: {{top_posters[8]}} </p>
-      <p>tenth: {{top_posters[9]}} </p>
-    </div>
-</div>
-
-<div class = "center">
-
-  <div class = "search_form">
-    <form method="POST">
-      <input name="search_form">
-
-      <input type = "checkbox" name ="title">
-      <label for="title">title</label>
-
-
-      <input type = "checkbox" name ="content">
-      <label for="content"> content</label>
-
-      <button type="submit" >filter</button>
-
-    </form>
-
-  </div>
-  <a href="/forms/create"> create a blog</a>
-
-
-  <div class="posts">
-
-
-    {% for post in all_forms %}
-
-    <div class = "post_container">
-      <div class = "post_title">
-        title: {{post[3]}}
+    {% if session['username'] != "guest" %}
+      <div class = "user_stats">
+        <h1> {{stat[0][2]}} stats </h1>
+        {{stat[0][2]}}
+        {{stat[0][3]}}
       </div>
-      <div class = "post_by">
-        by {{post[1]}}
-      </div>
-      <div class = "post_core">
-        <span>{{post[2]}}</span>
-      </div>
-      <div class = "post_likes">
-        <p>{{post[5]}}</p>
-      </div>
-      <div class = "post_dislikes">
-        <p>{{post[6]}}</p>
-      </div>
-    </div>
+    {% endif %}
 
-    {% endfor %}
+    {% if session['username'] == "guest" %}
+      <div class = "user_stats">
+        <h1> stats </h1>
+        please login to show stats
+      </div>
+    {% endif %}
 
   </div>
 
-</div>
+  <div class = "center">
+    <div class = "search_form">
+      <form method="POST">
+        <input name="search_form">
+
+        <input type = "checkbox" name ="title">
+        <label for="title">title</label>
 
 
-<div class = "right">
+        <input type = "checkbox" name ="content">
+        <label for="content"> content</label>
 
-  <div class = "top_posts">
+        <button type="submit" >filter</button>
 
-  </div>
+      </form>
 
-  <div class = "bottom_posts">
-    <h1> most dislkied posts</h1>
+    </div>
+    <a href="/forms/create"> create a blog</a>
 
 
+    <div class="posts">
+
+
+      {% for post in all_forms %}
+
+      <div class = "post_container">
+        <div class = "post_title">
+            <u>{{post[3]}}</u>
+        </div>
+        <div class = "post_core">
+          <p>{{post[2]}}</p>
+        </div>
+        <div class = "post_by">
+          by {{post[1]}}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    </div>
 </div>
 
 

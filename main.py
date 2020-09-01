@@ -227,7 +227,7 @@ def forms():
 
     conn = sqlite3.connect("snowbaord.db") # shorten
     c = conn.cursor()
-    c.execute("select user,like from formpost ORDER BY like desc limit 10")
+    c.execute("select name from user ORDER BY post desc limit 10")
     top_posters = c.fetchall()
     conn.close()
 
@@ -237,13 +237,15 @@ def forms():
 def forms_post():
     content = None
     title = None
+
     if request.method == 'POST' and "title" in request.form:
         title = request.form['title']
 
     if request.method == 'POST' and "content" in request.form:
         content = request.form['content']
 
-    search = request.form['search_form']
+    if request.method == 'POST' and "search_form" in request.form:
+        search = request.form['search_form']
 
     if title is None:# shorten
         if content is None:
@@ -283,12 +285,6 @@ def forms_post():
     personal_stat = c.fetchall()
     conn.close()
 
-
-    conn = sqlite3.connect("snowbaord.db") # shorten
-    c = conn.cursor()
-    c.execute("select user,like from formpost ORDER BY like desc limit 10")
-    top_posters = c.fetchall()
-    conn.close()
 
     return render_template('forms.html', user = session['username'], stat = personal_stat, all_forms = result, top_posters = top_posters,)
 
