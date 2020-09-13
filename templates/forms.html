@@ -3,24 +3,6 @@
 {% block content %}
 
 <div class = "background_forms">
-  <div class = "left">
-
-    {% if session['username'] != "guest" %}
-      <div class = "user_stats">
-        <h1> {{stat[0][2]}} stats </h1>
-        {{stat[0][2]}}
-        {{stat[0][3]}}
-      </div>
-    {% endif %}
-
-    {% if session['username'] == "guest" %}
-      <div class = "user_stats">
-        <h1> stats </h1>
-        please login to show stats
-      </div>
-    {% endif %}
-
-  </div>
 
   <div class = "center">
     <div class = "search_form">
@@ -39,8 +21,9 @@
       </form>
 
     </div>
-    <a href="/forms/create"> create a blog</a>
-
+    <div class = "form_create">
+      <a href="/forms/create"> create a blog</a>
+    </div>
 
     <div class="posts">
 

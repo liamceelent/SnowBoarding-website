@@ -9,14 +9,14 @@
   <div class = "search_gear_container">
     <div class = "search_bar_gear">
       <form method="POST">
-        <p> search</p><input name="search_bar">
+        <p><b> Search: </b></p><input name="search_bar" placeholder = "search here...">
       </form>
     </div>
   </div>
 
 <div class = "filters">
   <form method="POST">
-    <h1> filters </h1>
+    <h1> Filters </h1>
     <p> colour </p>
 
     <input type = "checkbox" name ="yellow">
@@ -92,7 +92,7 @@
     <label for="500"><$500</label>
 
     <input type = "checkbox" name ="600">
-    <label for="600"><$600</label>
+    <label for="600"><$600</label> <br>
 
 
 
@@ -106,7 +106,7 @@
 
   <a href="/gear_click?search_id={{post[0]}}&table={{post[2]}}" class = "gear_conatiner">
     <div class = "gear_img">
-      <img src="/static/image/{{post[7]}}">
+      <img src="/static/image_gear/{{post[7]}}">
     </div>
     <div class="gear_name">
       <p> {{post[1]}} </p>
@@ -115,10 +115,7 @@
 
 
   {% endfor %}
-  {{price_search_ids}}
-  {{size_search_ids}}
-  {{brand_search_ids}}
-  {{colour_search_ids}}
+
 </div>
 
 {% endblock %}

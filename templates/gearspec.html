@@ -3,32 +3,34 @@
 {% block content %}
 
 {% for post in result %}
-
-<div class = "gearspec_container">
+<div class = "gear_click_left">
   <div class = "gearspec_title">
       <h1>   {{post[1]}} </h1>
   </div>
 
   <div class = "clicked_img">
-    <img src="/static/image/{{post[7]}}">
+    <img src="/static/image_gear/{{post[7]}}">
   </div>
+</div>
+<div class = "gear_click_right">
   <div class = "gearspec_description">
-    <h1> description</h1>
+    <h1> Product Details</h1>
     {{post[5]}}
   </div>
-
+  <div class = "price">
+    Price
+    {{post[3]}}
+  </div>
   <div class = "gearspec_specs">
     <h1> specs</h1>
-    {{post[0]}}
-    {{post[2]}}
-    {{post[3]}}
-    {{post[4]}}
-    {{post[5]}}
+    <p> brand </p>
+    {{post[4]}} <br>
+    <p>length</p>
     {{post[6]}}
     {{post[8]}}
 
+  </div>
 </div>
-
 
 {% endfor %}
 
