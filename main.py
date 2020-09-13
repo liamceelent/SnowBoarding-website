@@ -47,8 +47,8 @@ def create_acc():
         c.execute(query, brand)
         conn.commit()
         conn.close() # creating a account
-
-        return render_template('login.html')
+        stat = "account created"
+        return render_template('login.html', stat = stat)
 
     if request.method == 'POST' and "name" in request.form: # checking if login maths
 
@@ -302,9 +302,7 @@ def forms():
 
     personal_stat = database_var("select * from user where name =?",(session['username'],))
 
-    top_posters = database("select name from user ORDER BY post desc limit 10")
-
-    return render_template('forms.html', all_forms = all_forms, stat = personal_stat, top_posters = top_posters)
+    return render_template('forms.html', all_forms = all_forms, stat = personal_stat)
 
 @app.route("/forms", methods = ['POST', 'GET'])
 def forms_post():
@@ -364,16 +362,9 @@ def forms_create_post():
     c.execute(sql, val)
     conn.commit()
 
-    c.execute("select post from user where name =?",(session['username'],))
-    amt = c.fetchall()
-    b = amt[0][0]
-    b += 1
-
-    c.execute("update user set post = ? where name = ?", (b, session['username']))
-    conn.commit()
 
     conn.close()
-    stat = b
+    stat = "post made :)"
 
     return render_template('create_post.html',stat = stat)
 

@@ -156,10 +156,14 @@ cssssssssssssssssssssssssss
 
 .title_guide{
   text-align: center;
-  padding-top: 100px;
+  padding-top: 10px;
+  font-family: 'Roboto Slab', serif;
+  font-size: 100px;
 }
 
-
+.title_guide h1{
+    margin: 5% 0 0 0  ;
+}
 .guide_directory_container{
   height: auto;
 }
@@ -229,17 +233,51 @@ cssssssssssssssssssssssssss
 
 .guide_content_container{
   text-align: center;
-
+  width:70%;
+  margin-left: 15%;
 }
 
 /* gudie divs for writitng*/
-.one, .two, .three, .four, .five, .six{
-  height:100%;
-  padding:0 20% 0 20%;
-  float: left;
-
+.strap,.turning,.Balance_tips,.what_to_wear,.chairlift,.tricks{
+  height:200%;
+  font-size: 30px;
+  color: black;
+}
+.strap h1, .turning h1, .Balance_tips h1, .what_to_wear h1, .chairlift h1, .tricks h1{
+  font-family: 'Roboto Slab', serif;
+}
+.strap img, .turning img, .Balance_tips img, .what_to_wear img, .chairlift img, .tricks img{
+  width:80%;
+  margin: 3% 0 3% 3%;
+  font-size: 30px;
 }
 
+.strap a,.turning a,.Balance_tips a,.what_to_wear a,.chairlift a{
+  color:black;
+  font-size: 20px;
+  margin-top: 2%;
+}
+
+.strap{
+  height:180%;
+}
+.turning{
+  height:130%;
+}
+.Balance_tips{
+  height: 100%;
+}
+.what_to_wear{
+ height: 240%;
+}
+
+.chairlift{
+  height:140%;
+}
+
+.tricks{
+  height: 200%;
+}
 /*
 
 loginnnnnnnnnnnnnnnnnnn ppage
@@ -299,8 +337,13 @@ cssssssssssssssssssssssssss
   text-align: center;
 }
 .back{
-  margin: 10% 0 0 0;
+  margin: 5% 0 0 0;
   text-align: center;
+}
+
+.popup p{
+  text-align: center;
+  margin: 5% 0 0 0;
 }
 
 /*
@@ -323,6 +366,7 @@ cssssssssssssssssssssssssss
 }
 .shop h1{
   margin: 0;
+  font-family: 'Roboto Slab', serif;
 }
 .gear_start{
   width:100%;
@@ -353,6 +397,11 @@ cssssssssssssssssssssssssss
   padding:5%;
   border: 0.1vw solid black;
   height:65%;
+}
+
+.snowbaord_contents p,.clothes_contents p,.snowbinding_contents p,.snowboots_contents p  {
+  color:black;
+  text-decoration: none;
 }
 
 .snowbootsimg,.clothesimg,.snowbaordimg,.snowbindingimg{
@@ -436,7 +485,7 @@ cssssssssssssssssssssssssss
 .filters button{
   width: 15%;
   height: 10%;
-  margin-top: 2.5%;
+  margin-top: 1.5%;
 }
 .snowbaordtitle h1{
   text-align: center;
@@ -488,9 +537,16 @@ cssssssssssssssssssssssssss
 }
 .gearspec_specs{
   text-align: center;
+  font-size: 30px;
+  border-style: solid;
+  margin:5% 0 0 20%;
+  width: 60%;
+  height:22%;
 }
 
-
+.gearspec_specs h1{
+  margin: 0;
+}
 
 /*
 
@@ -505,7 +561,7 @@ cssssssssssssssssssssssssss
 .background_forms{
   background-image: url("/static/image/background_img_forms.jpg");
   width: 100%;
-  height:200%;
+  height:100%;
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
@@ -550,6 +606,7 @@ cssssssssssssssssssssssssss
   border: 1px solid;
   text-decoration: none;
   width: 50%;
+  padding: 1%;
 }
 
 .posts{
@@ -620,6 +677,7 @@ cssssssssssssssssssssssssss
 }
 
 
+
 /* create post csss */
 
 .create_post_container{
@@ -655,16 +713,23 @@ cssssssssssssssssssssssssss
   margin: 3% 0 0 0;
 }
 
+.post_submit input{
+  width:15%;
+  height: 7%;
+  background-color: white;
+}
 .back_form{
   text-align: center;
-  margin-top: 5%;
   width: 10%;
+  margin: 3% 0 0 45%;
 }
 
 .back_form a{
-  text-align: center;
-  margin-top: 5%;
-  width: 10%;
+  color: black;
+  font-size: 15px;
+  text-decoration: none;
+  border: 2px solid;
+  padding: 3%;
 }
 footer p{
   color: white;
