@@ -319,19 +319,19 @@ def forms_post():
         search = request.form['search_form']
 
     if title is None:
-        if content is None:
+        if content is None: # plain searching
             result = database("select * from formpost where title LIKE '%"+ search +"%' OR post LIKE '%"+ search +"%'")
 
     if title is None:
-        if content is not None:
+        if content is not None: # searching content
             result = database("select * from formpost where post LIKE '%"+ search +"%'")
 
-    if title is not  None:
+    if title is not  None: # searching title
         if content is None:
             result = database("select * from formpost where title LIKE '%"+ search +"%'")
 
     if title is not None:
-        if content is not None:
+        if content is not None: #searching both content and title
             result = database("select * from formpost where title LIKE '%"+ search +"%' OR post LIKE '%"+ search +"%'")
 
     personal_stat = database_var("select * from user where name =?",(session['username'],))
@@ -341,7 +341,7 @@ def forms_post():
 
 @app.route("/forms/create")
 def forms_create():
-    if "username" in session:
+    if "username" in session: #see if logged in
         return render_template('create_post.html')
     else:
         stat = "please login"
@@ -355,7 +355,7 @@ def forms_create_post():
     user = session["username"]
     time = datetime.datetime.now()
 
-    conn = sqlite3.connect("snowbaord.db") # shorten
+    conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
     sql = "INSERT INTO formpost (user, post, title, time) VALUES (?, ?, ?, ?)"
     val = (session['username'], content, title, time)

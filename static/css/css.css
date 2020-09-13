@@ -738,10 +738,9 @@ footer p{
   text-align: center;
   background-color: black;
   margin: 0px;
-  height:5%;
+  height:3%;
   position: fixed;
-
   bottom: 0;
-
   font-size: 100%;
+  padding: 0.5% 0 0 0;
 }
