@@ -3,7 +3,6 @@ import sqlite3
 from func import database, filtersnowbaord, database_var, filtersnowbinding,filterclothes,filtersnowboots
 import os
 import hashlib
-import datetime
 
 
 app = Flask(__name__)
@@ -17,19 +16,26 @@ def home():
         loggedstat = "you are logged in as", session['username']
         return render_template('home.html', loggedstat = loggedstat) #home page if logged in
     else:
+        session['username'] = "guest"
         return render_template('home.html') #home page if not logged in
 
 @app.route("/login")
 def login():
     return render_template('login.html')
 
-@app.route("/login", methods = ['POST', 'GET'])
+@app.route("/login", methods = ['POST'])
 def create_acc():
+
+    if request.method == 'POST' and "logout" in request.form:
+        session['username'] = "guest"
+        return redirect(url_for("home"))
 
     if request.method == 'POST' and "create_name" in request.form: # seeing if account has been maid
 
         name = request.form['create_name']
         password = request.form['create_pass']
+
+        names = database("select name from user") # ask sir about this
 
         salt = os.urandom(32)
         key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
@@ -60,7 +66,6 @@ def create_acc():
         c.execute("select salt, key from user where name = ?",(name,))
         result = c.fetchall() # retreiving password and username for login
         conn.close()
-        print(result)
 
         if not result:
             stat = "wrong user name mate"
@@ -76,23 +81,25 @@ def create_acc():
                 stat = "wrong user name mate"
                 return render_template('login.html', stat=stat)
 
+
+    return render_template('login.html')
 @app.route("/gear", methods = ['POST', 'GET']) # gear page
 def gear_page():
 
     return render_template('gear.html')
+
+
 
 @app.route("/gear_snowbinding", methods = ['POST', 'GET'])
 def gear_snowbinding():
     search_snowbinding = request.form.get('search_bar')
 
     #brands request
-
     Burton = request.form.get('Burton')
     Salomon = request.form.get('Salomon')
     Lib_Tech = request.form.get('Lib_Tech')
     Jones_Snowboards = request.form.get('Jones_Snowboards')
     Gnu = request.form.get('Gnu')
-
     # sizes "
 
     Large = request.form.get('Large')
@@ -228,20 +235,35 @@ def gear_clothes():
 
     return render_template('gear_clothes.html', clothes_r = query_r)
 
-
-
-@app.route("/gear_snow_boots", methods = ['POST', 'GET'])
+@app.route("/gear_snow_boots")
 def gear_snow_boots():
 
-    DC = request.form.get('DC')
-    Burton = request.form.get('Burton')
+    brands = database("select name from snowboots_brands")
+
+    sizes = database("select size from size")
+
+    filter_options = []
+
+    return render_template('gear_snow_boots.html', filter_options = filter_options)
+
+@app.route("/gear_snow_boots", methods = ['POST'])
+def gear_snow_boots_post():
+
+    brands = database("select name from snowboots_brands")
+
+    sizes = database("select distinct size from size")
 
 
-    # sizes "
+    itmes_to_filter = []
 
-    Large = request.form.get('Large')
-    Medium = request.form.get('Medium')
-    Small = request.form.get('Small')
+    for i in range(len(filter_options):
+        if filter_options[i] is not None:
+            items_to_filter += request.form.get(filter_options[i])
+
+    print(brands)
+    print(sizes)
+    print(brands[0])
+
 
     #prices "
 
@@ -341,11 +363,11 @@ def forms_post():
 
 @app.route("/forms/create")
 def forms_create():
-    if "username" in session: #see if logged in
+    if session['username'] != "guest": #see if logged in
         return render_template('create_post.html')
     else:
         stat = "please login"
-        return render_template('login.html', stat = stat)
+        return redirect(url_for("login"))
 
 
 @app.route("/forms/create", methods = ['POST', 'GET'])
@@ -357,8 +379,8 @@ def forms_create_post():
 
     conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
-    sql = "INSERT INTO formpost (user, post, title, time) VALUES (?, ?, ?, ?)"
-    val = (session['username'], content, title, time)
+    sql = "INSERT INTO formpost (user, post, title, time) VALUES (?, ?, ?)"
+    val = (session['username'], content, title)
     c.execute(sql, val)
     conn.commit()
 

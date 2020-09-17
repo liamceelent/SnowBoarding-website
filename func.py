@@ -19,18 +19,8 @@ def database_var(query, var): # dtabase with variable
     conn.close()
     return (result)
 
-def filterbrand(fcount, bcount, query):
-    queryadd = ""
-    if fcount > 0:# checking whether another brand has be input into the query
-        if bcount == 1: # if there is only one brand
-            queryadd += "AND " # add filter
-    if fcount > 0: # checking if another brand is in query
-        if bcount >1: # checking if another brand is in query
-            queryadd += "OR " # if another brand has been entered
-    queryadd += query # Add Filter
-    return(queryadd)
 
-def filtercolor(lcount, bcount, ccount, query):
+def filter( query):
     queryadd = ""
     if bcount >= 1: # if there is a brand entered
         if ccount == 1: # if there is only one color
@@ -43,25 +33,7 @@ def filtercolor(lcount, bcount, ccount, query):
 
     return(queryadd)
 
-def filtersize(bcount, ccount, scount, gcount, query) :
-    queryadd = ""
-    if bcount or ccount >= 1:
-        if scount == 1: # seeing if and is neccary with no brakets
-            queryadd  += " AND " # Add Filter
-    if gcount > 0: # if more than one size has been added to the query
-        if scount > 1: # checking if ther has been more than filter for size
-            queryadd  += "OR " # Add Filter
-    queryadd  += query # Add Filter
 
-def filtersize_noc(bcount, scount, gcount, query) : # no c stands for no colors being filtered
-    queryadd = ""
-    if gcount > 0: # if more than one size has been added to the query
-        if scount > 1: # checking if ther has been more than filter for size
-            queryadd  += "OR " # Add Filter
-    queryadd  += query # Add Filter
-
-    print(queryadd)
-    return(queryadd)
 
 
 
@@ -75,7 +47,7 @@ def filtersnowboots(Burton,DC,Small, Medium, Large,l200,l300,l400,l500,l600):
 
 
     brands = [Burton,DC]
-    for i in range(0,2):
+    for i in range(len(brands)):
         if brands[i] is not None:
             bcount+= 1
 
@@ -92,22 +64,24 @@ def filtersnowboots(Burton,DC,Small, Medium, Large,l200,l300,l400,l500,l600):
     print(scount)
     print(pcount)
     print(bcount)
+
+    allcount = bcount + scount + pcount
+
     fcount = 0 # using this to see how many brands have been placed in the query
 
     query = "SELECT * FROM snow_boots "
 
-    if bcount or scount or pcount > 0:
-        if fcount == 0:
+    if allcount > 0:
             query += "WHERE "
 
-    if bcount > 0:
+    if allcount > 0:
         query += "(" # if there is more than one brand to be filtered
 
     brand = ["'Burton'","'DC'"]
 
     for i in range(0,2):
         if brands[i] is not None:
-            query += filterbrand(fcount, bcount, "brand = " + brand[i] +"")
+            query += filterbrand(fcount, allcount, "brand = " + brand[i] +"")
             fcount += 1
 
     if bcount > 0 :

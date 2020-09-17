@@ -16,45 +16,13 @@
 
 <div class = "filters">
   <form method="POST">
-    <h1> Filters </h1>
 
-    <p> size </p>
+    {{for i in filter_options}}
 
-    <input type = "checkbox" name ="Small">
-    <label for="Small">Small</label>
+      <input type = "checkbox" name = "{{filter_options[i]}}""
+      <label for="{{filter_options[i]}}">{{filter_options[i]}}</label>
 
-    <input type = "checkbox" name ="Medium">
-    <label for="Medium">Medium</label>
-
-    <input type = "checkbox" name ="Large">
-    <label for="Large">Large</label>
-
-    <p> brand </p>
-
-    <input type = "checkbox" name ="DC">
-    <label for="DC">DC</label>
-
-    <input type = "checkbox" name ="Burton">
-    <label for="Burton">Burton</label>
-
-    <p> price </p>
-
-    <input type = "checkbox" name ="200">
-    <label for="200"><$200</label>
-
-    <input type = "checkbox" name ="300">
-    <label for="300"><$300</label>
-
-    <input type = "checkbox" name ="400">
-    <label for="400"><$400</label>
-
-    <input type = "checkbox" name ="500">
-    <label for="500"><$500</label>
-
-    <input type = "checkbox" name ="600">
-    <label for="600"><$600</label><br>
-
-
+    {{end for}}
 
 
     <button type="submit" >filter</button>
