@@ -17,16 +17,14 @@
 <div class = "filters">
   <form method="POST">
 
-    {{for i in filter_options}}
-
-      <input type = "checkbox" name = "{{filter_options[i]}}""
-      <label for="{{filter_options[i]}}">{{filter_options[i]}}</label>
-
-    {{end for}}
-
+    {% for fil in filter %}
+      <input type = "checkbox" name = "{{filter_options[fil]}}" ></input>
+      <label for="{{filter_options[fil]}}">{{filter_options[fil]}}</label>
+    {% endfor %}
 
     <button type="submit" >filter</button>
 
+    
     </form>
 
 </div>

@@ -244,28 +244,47 @@ def gear_snow_boots():
 
     filter_options = []
 
-    return render_template('gear_snow_boots.html', filter_options = filter_options)
+    for brand in brands:
+        filter_options.append(brand[0])
+
+    for size in sizes:
+        filter_options.append(size[0])
+
+    filters = []
+
+    for i in range(len(filter_options)):
+        filters.append(i)
+
+    print(filters)
+    print(filter_options)
+
+    return render_template('gear_snow_boots.html', filter_options = filter_options, filter = filters)
 
 @app.route("/gear_snow_boots", methods = ['POST'])
 def gear_snow_boots_post():
 
     brands = database("select name from snowboots_brands")
 
-    sizes = database("select distinct size from size")
+    sizes = database("select size from size")
 
+    filter_options = []
 
-    itmes_to_filter = []
+    for brand in brands:
+        filter_options.append(brand[0])
 
-    for i in range(len(filter_options):
-        if filter_options[i] is not None:
-            items_to_filter += request.form.get(filter_options[i])
+    for size in sizes:
+        filter_options.append(size[0])
 
-    print(brands)
-    print(sizes)
-    print(brands[0])
+    items_to_filter = []
+    print(filter_options)
 
+    for i in range (filter_options):
+        item = request.form.get(filter_options[i])
+        items_to_filter.append(items_to_filter)
 
-    #prices "
+    print(items_to_filter)
+
+    # prices "
 
     l200 = request.form.get('200')
     l300 = request.form.get('300')
