@@ -8,7 +8,7 @@ import hashlib
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'super secret key'
-
+app.config['SESSION_PERMANENT'] = False
 
 @app.route("/")
 def home():
@@ -247,8 +247,10 @@ def gear_snow_boots():
     }
 
     for brand in brands:
-        type[brand[0]] = 1
-    #need to wrok on getting tpyes sorted
+        type[brand[0]] = "1"  # need to wrok on getting tpyes sorted
+
+    for size in sizes:
+        type[size[0]] = "2"
 
 
     filter_options = []
@@ -277,29 +279,29 @@ def gear_snow_boots():
     print(keys)
     print(type)
 
+    session['keys'] = keys
+    session['type'] = type
+    session['filter_options'] = filter_options
+
+
     return render_template('gear_snow_boots.html', filter_options = filter_options, filter = filters,key = keys)
 
 @app.route("/gear_snow_boots", methods = ['POST'])
 def gear_snow_boots_post():
 
-    brands = database("select name from snowboots_brands")
-
-    sizes = database("select size from size")
-
     queries = {
 
-    "brand": "brand =",
-    "size": "SELECT * FROM snowboots WHERE id = (select snowboot_id from snowboots_size where size_id = )"
+    "1": "brand =",
+    "2": "SELECT * FROM snowboots WHERE id = (select snowboot_id from snowboots_size where size_id = )"
 
     }
 
-    filter_options = []
+    keys = session.get('keys')
 
-    for brand in brands:
-        filter_options.append(brand[0])
+    type = session.get('type')
 
-    for size in sizes:
-        filter_options.append(size[0])
+    filter_options = session.get('filter_options')
+
 
     items_to_filter = []
 
@@ -310,8 +312,23 @@ def gear_snow_boots_post():
         item = request.form.get(filter_options[i])
         if item is not None:
             items_to_filter.append(i)
-        #if item is not None:
-    print(items_to_filter)
+
+
+
+    query = "select * from snowboots"
+
+    for item in items_to_filter:
+        item = str(item)
+
+
+
+
+    print(keys)
+    print(type)
+
+
+
+
 
 
     if request.method == 'POST' and "search_bar" in request.form:
