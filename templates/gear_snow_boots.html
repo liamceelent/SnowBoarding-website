@@ -18,13 +18,13 @@
   <form method="POST">
 
     {% for fil in filter %}
-      <input type = "checkbox" name = "{{filter_options[fil]}}" ></input>
+      <input type = "checkbox" id = "{{fil}}" name = "{{filter_options[fil]}}" ></input>
       <label for="{{filter_options[fil]}}">{{filter_options[fil]}}</label>
     {% endfor %}
 
     <button type="submit" >filter</button>
 
-    
+
     </form>
 
 </div>

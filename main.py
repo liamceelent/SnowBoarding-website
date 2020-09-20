@@ -242,6 +242,15 @@ def gear_snow_boots():
 
     sizes = database("select size from size")
 
+    type = {
+
+    }
+
+    for brand in brands:
+        type[brand[0]] = 1
+    #need to wrok on getting tpyes sorted
+
+
     filter_options = []
 
     for brand in brands:
@@ -258,7 +267,17 @@ def gear_snow_boots():
     print(filters)
     print(filter_options)
 
-    return render_template('gear_snow_boots.html', filter_options = filter_options, filter = filters)
+    keys = {
+
+    }
+
+    for f in range(len(filter_options)):
+        keys[f] = filter_options[f]
+
+    print(keys)
+    print(type)
+
+    return render_template('gear_snow_boots.html', filter_options = filter_options, filter = filters,key = keys)
 
 @app.route("/gear_snow_boots", methods = ['POST'])
 def gear_snow_boots_post():
@@ -266,6 +285,13 @@ def gear_snow_boots_post():
     brands = database("select name from snowboots_brands")
 
     sizes = database("select size from size")
+
+    queries = {
+
+    "brand": "brand =",
+    "size": "SELECT * FROM snowboots WHERE id = (select snowboot_id from snowboots_size where size_id = )"
+
+    }
 
     filter_options = []
 
@@ -276,29 +302,22 @@ def gear_snow_boots_post():
         filter_options.append(size[0])
 
     items_to_filter = []
+
     print(filter_options)
 
-    for i in range (filter_options):
+    for i in range (len(filter_options)):
+
         item = request.form.get(filter_options[i])
-        items_to_filter.append(items_to_filter)
-
+        if item is not None:
+            items_to_filter.append(i)
+        #if item is not None:
     print(items_to_filter)
-
-    # prices "
-
-    l200 = request.form.get('200')
-    l300 = request.form.get('300')
-    l400 = request.form.get('400')
-    l500 = request.form.get('500')
-    l600 = request.form.get('600')
 
 
     if request.method == 'POST' and "search_bar" in request.form:
         search_snowboots = request.form['search_bar']
         search_snowboots_r = database("select * from snow_boots where name LIKE '%"+ search_snowboots +"%'")
         return render_template('gear_snow_boots.html', snowboots_r = search_snowboots_r)
-
-    query = filtersnowboots(Burton,DC,Small, Medium, Large,l200,l300,l400,l500,l600)
 
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
