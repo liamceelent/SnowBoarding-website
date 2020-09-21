@@ -246,12 +246,12 @@ def gear_snow_boots():
 
     }
 
+
     for brand in brands:
         type[brand[0]] = "1"  # need to wrok on getting tpyes sorted
 
     for size in sizes:
         type[size[0]] = "2"
-
 
     filter_options = []
 
@@ -278,6 +278,7 @@ def gear_snow_boots():
 
     print(keys)
     print(type)
+    print(keys[0])
 
     session['keys'] = keys
     session['type'] = type
@@ -302,30 +303,50 @@ def gear_snow_boots_post():
 
     filter_options = session.get('filter_options')
 
+    bcount = 0
+    scount = 0
 
     items_to_filter = []
 
     print(filter_options)
 
-    for i in range (len(filter_options)):
+    for i in range(len(filter_options)):
 
         item = request.form.get(filter_options[i])
         if item is not None:
             items_to_filter.append(i)
 
+    fil = str(items_to_filter[0])
+
+    print(items_to_filter)
+
+    for i in range(len(items_to_filter)):
+        fil = str(items_to_filter[i])
+        item = keys[fil]
+        if type[item] == '1':
+            bcount += 1
+        else:
+            scount += 1
+
+    query = "select * from snowboots "
+
+    if len(items_to_filter) > 0:
+        query += "where "
+
+    if bcount > 0:
+        query += "("
+        
+    if icount > 0:
+        if bcount
 
 
-    query = "select * from snowboots"
-
-    for item in items_to_filter:
-        item = str(item)
 
 
-
-
+    print(query)
     print(keys)
     print(type)
-
+    print(bcount)
+    print(scount)
 
 
 
