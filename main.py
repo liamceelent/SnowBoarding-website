@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, session
 import sqlite3
-from func import database, filtersnowbaord, database_var, filtersnowbinding,filterclothes,filtersnowboots
+from func import database, database_var, filter, filter_post
 import os
 import hashlib
 
@@ -92,27 +92,10 @@ def gear_page():
 
 @app.route("/gear_snowbinding", methods = ['POST', 'GET'])
 def gear_snowbinding():
+
     search_snowbinding = request.form.get('search_bar')
 
-    #brands request
-    Burton = request.form.get('Burton')
-    Salomon = request.form.get('Salomon')
-    Lib_Tech = request.form.get('Lib_Tech')
-    Jones_Snowboards = request.form.get('Jones_Snowboards')
-    Gnu = request.form.get('Gnu')
-    # sizes "
 
-    Large = request.form.get('Large')
-    Medium = request.form.get('Medium')
-    Small = request.form.get('Small')
-
-    #prices "
-
-    l200 = request.form.get('200')
-    l300 = request.form.get('300')
-    l400 = request.form.get('400')
-    l500 = request.form.get('500')
-    l600 = request.form.get('600')
 
     snowbinding_r = database("select * from snowbinding where id >= 1") # r stands for result
 
@@ -120,8 +103,6 @@ def gear_snowbinding():
         search_snowbinding = database("select * from snowbinding where name LIKE '%"+ search_snowbinding +"%'")
         return render_template('gear_snowbinding.html', snowbinding_r = search_snowbinding)
 
-    query = filtersnowbinding(Jones_Snowboards,Gnu,Lib_Tech,Salomon,Burton,Small, Medium, Large,\
-    l200,l300,l400,l500,l600) #func filter
 
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
@@ -141,50 +122,11 @@ def gear_snowbaord():
 
     search_snowboard = request.form.get('search_bar')
 
-    #brands request
-
-    Burton = request.form.get('Burton')
-    Salomon = request.form.get('Salomon')
-    Lib_Tech = request.form.get('Lib_Tech')
-    Jones_Snowboards = request.form.get('Jones_Snowboards')
-    Gnu = request.form.get('Gnu')
-
-    #colour "
-    blue = request.form.get('blue')
-    red = request.form.get('red')
-    orange = request.form.get('orange')
-    pink = request.form.get('pink')
-    white = request.form.get('white')
-    black = request.form.get('black')
-    yellow = request.form.get('yellow')
-    other = request.form.get('other')
-    green = request.form.get('green')
-
-    # sizes "
-
-    one_forty = request.form.get('140')
-    one_forty_two = request.form.get('142')
-    one_forty_four = request.form.get('144')
-    one_forty_six = request.form.get('146')
-    one_forty_eight = request.form.get('148')
-
-    #prices "
-
-    l200 = request.form.get('200')
-    l300 = request.form.get('300')
-    l400 = request.form.get('400')
-    l500 = request.form.get('500')
-    l600 = request.form.get('600')
-    g600 = request.form.get('600+')
 
     # search bar code
     if search_snowboard is not None:
         search_snowboard_r = database("select * from snowbaord where name LIKE '%"+ search_snowboard +"%'")
         return render_template('gear_snowbaord.html', search_snowboard_r = search_snowboard_r)
-
-    query = filtersnowbaord(Burton,Salomon,Lib_Tech,Jones_Snowboards,Gnu,blue,red,\
-    orange,pink,white,black,yellow,other,one_forty,one_forty_two,one_forty_four,\
-    one_forty_six,one_forty_eight,l200,l300,l400,l500,l600,g600) #func filter
 
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
@@ -195,167 +137,61 @@ def gear_snowbaord():
     return render_template("gear_snowbaord.html", search_snowboard_r = query_r)
 
 
-@app.route("/gear_clothes", methods = ['POST', 'GET'])
+@app.route("/gear_clothes")
 def gear_clothes():
 
-    Burton = request.form.get('Burton')
-    North_Face = request.form.get('North_Face')
-    Macpac = request.form.get('Macpac')
-    Swandry = request.form.get('Swandry')
-    Kathmandu = request.form.get('Kathmandu')
-
-    # sizes "
-
-    Large = request.form.get('Large')
-    Medium = request.form.get('Medium')
-    Small = request.form.get('Small')
-
-    #prices "
-
-    l200 = request.form.get('200')
-    l300 = request.form.get('300')
-    l400 = request.form.get('400')
-    l500 = request.form.get('500')
-    l600 = request.form.get('600')
-
-
-    if request.method == 'POST' and "search_bar" in request.form:
-        search_clothes = request.form['search_bar']
-        search_clothes_r  = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
-        return render_template('gear_clothes.html', clothes_r = search_clothes_r)
-
-    query = filterclothes(Burton,North_Face,Macpac,Swandry,Kathmandu,Small, Medium, Large,\
-    l200,l300,l400,l500,l600)
-
-    conn = sqlite3.connect('snowbaord.db')
-    c = conn.cursor()
-    c.execute(query)
-    query_r = c.fetchall()
-    conn.close()
-
-    return render_template('gear_clothes.html', clothes_r = query_r)
-
-@app.route("/gear_snow_boots")
-def gear_snow_boots():
-
-    brands = database("select name from snowboots_brands")
+    brands = database("select name from clothes_brands")
 
     sizes = database("select size from size")
 
-    type = {
+    size_ids = database("select id, size from size")
 
-    }
+    results = filter(brands,sizes,size_ids)
 
+    size_id = results[0]
+    filters = results[1]
+    filter_options = results[2]
+    type = results[3]
+    keys = results[4]
 
-    for brand in brands:
-        type[brand[0]] = "1"  # need to wrok on getting tpyes sorted
-
-    for size in sizes:
-        type[size[0]] = "2"
-
-    filter_options = []
-
-    for brand in brands:
-        filter_options.append(brand[0])
-
-    for size in sizes:
-        filter_options.append(size[0])
-
-    filters = []
-
-    for i in range(len(filter_options)):
-        filters.append(i)
-
-    print(filters)
-    print(filter_options)
-
-    keys = {
-
-    }
-
-    for f in range(len(filter_options)):
-        keys[f] = filter_options[f]
-
-    print(keys)
-    print(type)
-    print(keys[0])
-
+    # sending all variables over to post
     session['keys'] = keys
     session['type'] = type
     session['filter_options'] = filter_options
+    session['filters'] = filters
+    session['size_id'] = size_id
+
+    return render_template('gear_clothes.html', filter_options = filter_options, filter = filters,key = keys)
 
 
-    return render_template('gear_snow_boots.html', filter_options = filter_options, filter = filters,key = keys)
 
-@app.route("/gear_snow_boots", methods = ['POST'])
-def gear_snow_boots_post():
+
+@app.route("/gear_clothes", methods = ['POST'])
+def gear_clothes_post():
 
     queries = {
 
-    "1": "brand =",
-    "2": "SELECT * FROM snowboots WHERE id = (select snowboot_id from snowboots_size where size_id = )"
+    "1": "brand = ",
+    "2": "id = (select clothes_id from clothes_size where size_id = "
 
     }
-
+    # getting al variables
     keys = session.get('keys')
 
     type = session.get('type')
 
     filter_options = session.get('filter_options')
 
-    bcount = 0
-    scount = 0
+    filters = session.get('filters')
 
-    items_to_filter = []
+    size_id = session.get('size_id')
 
-    print(filter_options)
-
-    for i in range(len(filter_options)):
-
-        item = request.form.get(filter_options[i])
-        if item is not None:
-            items_to_filter.append(i)
-
-    fil = str(items_to_filter[0])
-
-    print(items_to_filter)
-
-    for i in range(len(items_to_filter)):
-        fil = str(items_to_filter[i])
-        item = keys[fil]
-        if type[item] == '1':
-            bcount += 1
-        else:
-            scount += 1
-
-    query = "select * from snowboots "
-
-    if len(items_to_filter) > 0:
-        query += "where "
-
-    if bcount > 0:
-        query += "("
-        
-    if icount > 0:
-        if bcount
+    query_start = "select * from clothes "
 
 
-
+    query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
 
     print(query)
-    print(keys)
-    print(type)
-    print(bcount)
-    print(scount)
-
-
-
-
-
-    if request.method == 'POST' and "search_bar" in request.form:
-        search_snowboots = request.form['search_bar']
-        search_snowboots_r = database("select * from snow_boots where name LIKE '%"+ search_snowboots +"%'")
-        return render_template('gear_snow_boots.html', snowboots_r = search_snowboots_r)
 
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
@@ -363,7 +199,79 @@ def gear_snow_boots_post():
     query_r = c.fetchall()
     conn.close()
 
-    return render_template('gear_snow_boots.html', snowboots_r = query_r)
+    if request.method == 'POST' and "search_bar" in request.form:
+        search_clothes = request.form['search_bar']
+        query_r  = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
+
+    return render_template('gear_clothes.html', clothes_r = query_r, filter_options = filter_options,filter = filters,key = keys)
+
+@app.route("/gear_snow_boots")
+def gear_snow_boots():
+     # getting all the things to filter by
+
+    brands = database("select name from snowboots_brands")
+
+    sizes = database("select size from size")
+
+    size_ids = database("select id,size from size")
+
+    # getting the size id from database
+
+    results = filter(brands,sizes,size_ids)
+
+    size_id = results[0]
+    filters = results[1]
+    filter_options = results[2]
+    type = results[3]
+    keys = results[4]
+
+    # sending all variables over to post
+    session['keys'] = keys
+    session['type'] = type
+    session['filter_options'] = filter_options
+    session['filters'] = filters
+    session['size_id'] = size_id
+
+    return render_template('gear_snow_boots.html', filter_options = filter_options, filter = filters,key = keys)
+
+@app.route("/gear_snow_boots", methods = ['POST'])
+def gear_snow_boots_post():
+
+    # queries between brands and sizes
+    queries = {
+
+    "1": "brand = ",
+    "2": "id = (select snowboot_id from snowboots_size where size_id = "
+
+    }
+    # getting al variables
+    keys = session.get('keys')
+
+    type = session.get('type')
+
+    filter_options = session.get('filter_options')
+
+    filters = session.get('filters')
+
+    size_id = session.get('size_id')
+
+    query_start = "select * from snowboots "
+
+
+    query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
+
+    conn = sqlite3.connect('snowbaord.db')
+    c = conn.cursor()
+    c.execute(query)
+    query_r = c.fetchall()
+    conn.close()
+
+    if request.method == 'POST' and "search_bar" in request.form:
+        search_snowboots = request.form['search_bar']
+        query_r = database("select * from snowboots where name LIKE '%"+ search_snowboots +"%'")
+
+    print(query_r)
+    return render_template('gear_snow_boots.html', snowboots_r = query_r, filter_options = filter_options,filter = filters,key = keys)
 
 
 @app.route("/gear_click")
@@ -380,7 +288,7 @@ def gear_click():
 
 
     if table == "2":
-        result = database_var("select * from snow_boots where id = ?",(search_id,)) # " " " "
+        result = database_var("select * from snowboots where id = ?",(search_id,)) # " " " "
 
 
     if table == "1":

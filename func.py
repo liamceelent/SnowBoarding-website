@@ -20,563 +20,125 @@ def database_var(query, var): # dtabase with variable
     return (result)
 
 
-def filter( query):
-    queryadd = ""
-    if bcount >= 1: # if there is a brand entered
-        if ccount == 1: # if there is only one color
-                queryadd += "AND " # add filter
-    if lcount > 0: # see if any color have already been put into the query
-        if ccount > 1: # checking if there is more than one color
-            queryadd += "OR " # add filter
-    queryadd += query # add filter
 
+def filter(brands, sizes, size_ids,):
 
-    return(queryadd)
+    size_id = {
 
+    }
 
 
+    for i in range(len(size_ids)):
+        for p in range (0,1):
+            size_id[size_ids[i][1]] = size_ids[i][p]
 
+    #sorting into either a brand or size
+    type = {
 
+    }
 
 
-def filtersnowboots(Burton,DC,Small, Medium, Large,l200,l300,l400,l500,l600):
+    for brand in brands:
+        type[brand[0]] = "1"
 
-    bcount = 0 # counting how many brand request forms we have
-    scount = 0 # counting how many size request forms we have
-    pcount = 0 # counting how many price request forms we have
+    for size in sizes:
+        type[size[0]] = "2"
 
+    filter_options = []
 
-    brands = [Burton,DC]
-    for i in range(len(brands)):
-        if brands[i] is not None:
-            bcount+= 1
+    for brand in brands:
+        filter_options.append(brand[0])
 
-    sizes = [Small, Medium, Large]
-    for i in range(0,3):
-        if sizes[i] is not None:
-            scount+= 1
+    for size in sizes:
+        filter_options.append(size[0])
 
-    prices = [l200,l300,l400,l500,l600]
-    for i in range(0,4):
-        if prices[i] is not None:
-            pcount+= 1
+    filters = []
 
-    print(scount)
-    print(pcount)
-    print(bcount)
+    for i in range(len(filter_options)):
+        filters.append(i)
 
-    allcount = bcount + scount + pcount
+    # giving all of the items keys
+    keys = {
 
-    fcount = 0 # using this to see how many brands have been placed in the query
+    }
 
-    query = "SELECT * FROM snow_boots "
+    for f in range(len(filter_options)):
+        keys[f] = filter_options[f]
 
-    if allcount > 0:
-            query += "WHERE "
+    return(size_id, filters, filter_options, type, keys)
 
-    if allcount > 0:
-        query += "(" # if there is more than one brand to be filtered
 
-    brand = ["'Burton'","'DC'"]
+def filter_post(queries, keys, type, filter_options, filters, size_id, query):
 
-    for i in range(0,2):
-        if brands[i] is not None:
-            query += filterbrand(fcount, allcount, "brand = " + brand[i] +"")
-            fcount += 1
+    bcount = 0  #amount of brands
+    scount = 0  # amount of sizes
+    icount = 0  # how many itmes overall
 
-    if bcount > 0 :
-        query += ")"
+    items_to_filter = []
 
+    for i in range(len(filter_options)):
 
-    if bcount  > 0: # checking if and is neccessary and brackets
-            if scount > 0:
-                query += "AND ("
+        item = request.form.get(filter_options[i])
+        if item is not None:
+            items_to_filter.append(i)
+            icount += 1
 
-    if bcount == 0:
-        if scount > 0:
-            query+= "("
+    # seeing if there is anything to be sorted
+    if icount > 0:
+        ##counting how many brands and sizes
+        for i in range(len(items_to_filter)):
+            fil = str(items_to_filter[i])
+            item = keys[fil]
+            if type[item] == '1':
+                bcount += 1
+            else:
+                scount += 1
+        #counting how many times something has bee added
+        pcount = 0
+        fcount = 0
 
-    gcount = 0
+        if len(items_to_filter) > 0:
+            query += "where "
 
-    size = ["'Small'","'Medium'","'Large'"]
+        if bcount > 0:
+            query += "("
 
-    for i in range(0,3):
-        if sizes[i] is not None:
-            query += filtersize_noc(bcount, scount, gcount, "size = " + size[i] +"")
-            gcount += 1
+        for i in range(len(items_to_filter)):
+            a = keys[str(items_to_filter[i])]
+            a = str(a)
+            if type[a] == "1":
+                if i >= 1:
+                    query += "or "
+                    query += queries["1"]
+                    query += "'"  + keys[str(items_to_filter[i])] + "'"
+                else:
+                    query += queries["1"]
+                    query += "'"  + keys[str(items_to_filter[i])] + "' "
 
-    if scount > 0:
-        query += ")"
+            if type[a] == "2":
 
-    kcount = 0 # counting if there has been a query
-    if pcount > 0:
-        if bcount or scount > 0:
-            query += " AND "
+                if bcount > 0 and fcount == 0:
+                    query += ") and ( "
+                    fcount += 1
 
-
-    if  l600  is None:
-        if l500 is not None:
-            if kcount == 0:
-                query += "price <= 500"
-                kcount += 1
-
-    if  l600 or l500  is None:
-        if l400 is not None:
-            if kcount ==0:
-                query += "price <= 400"
-                kcount += 1
-
-
-    if  l600 or l500 or l400 is None:
-        if l300 is not None:
-            if kcount == 0:
-                query += "price <= 300"
-                kcount += 1
-
-    if  l600 or l500 or l400 or l300 is None:
-        if l200 is not None:
-            if kcount == 0:
-                query += "price <= 200"
-                kcount += 1
-    print(query)
-    return(query)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def filterclothes(Burton,North_Face,Macpac,Swandry,Kathmandu,Small, Medium, Large,\
-l200,l300,l400,l500,l600):
-
-    bcount = 0 # counting how many brand request forms we have
-    scount = 0 # counting how many size request forms we have
-    pcount = 0 # counting how many price request forms we have
-
-
-    brands = [Burton,North_Face,Macpac,Swandry,Kathmandu]
-    for i in range(0,5):
-        if brands[i] is not None:
-            bcount+= 1
-
-    sizes = [Small, Medium, Large]
-    for i in range(0,3):
-        if sizes[i] is not None:
-            scount+= 1
-
-    prices = [l200,l300,l400,l500,l600]
-    for i in range(0,4):
-        if prices[i] is not None:
-            pcount+= 1
-
-    fcount = 0 # using this to see how many brands have been placed in the query
-
-    query = "SELECT * FROM clothes "
-
-    if bcount or scount or pcount > 0:
-        if fcount == 0:
-            query += "WHERE "
-
-    if bcount > 0:
-        query += "(" # if there is more than one brand to be filtered
-
-    brand = ["'Burton'","'North_Face'","'Macpac'","'Swandry'","'Kathmandu'"]
-
-    for i in range(0,5):
-        if brands[i] is not None:
-            query += filterbrand(fcount, bcount, "brand = " + brand[i] +"")
-            fcount += 1
-
-    if bcount > 0 :
-        query += ")"
-
-
-    if bcount  >= 1: # checking if and is neccessary and brackets
-            if scount > 0:
-                query += "AND ("
-
-    gcount = 0
-
-    size = ["'Small'","'Medium'","'Large'"]
-
-    for i in range(0,3):
-        if sizes[i] is not None:
-            query += filtersize_noc(bcount, scount, gcount, "size = " + size[i] +"")
-            gcount += 1
-
-    print(query)
-
-
-    if bcount >= 1:
-        if scount >0:
+                elif scount > 0 and bcount == 0 and fcount == 0:
+                    query += "("
+                    fcount += 1
+
+                if pcount >= 1:
+                    query += "or "
+                    query += queries["2"]
+                    a = keys[str(items_to_filter[i])]
+                    b = size_id[a]
+                    query += str(b) + ")"
+                    pcount +=1
+                else:
+                    query += queries["2"]
+                    a = keys[str(items_to_filter[i])]
+                    b = size_id[a]
+                    query += str(b) + ")"
+                    pcount +=1
+
+        if scount > 0 or bcount > 0:
             query += ")"
-
-    kcount = 0 # counting if there has been a query
-    if pcount > 0:
-        if bcount or scount > 0:
-            query += " AND "
-
-
-    if  l600  is None:
-        if l500 is not None:
-            if kcount == 0:
-                query += "price <= 500"
-                kcount += 1
-
-    if  l600 or l500  is None:
-        if l400 is not None:
-            if kcount ==0:
-                query += "price <= 400"
-                kcount += 1
-
-
-    if  l600 or l500 or l400 is None:
-        if l300 is not None:
-            if kcount == 0:
-                query += "price <= 300"
-                kcount += 1
-
-    if  l600 or l500 or l400 or l300 is None:
-        if l200 is not None:
-            if kcount == 0:
-                query += "price <= 200"
-                kcount += 1
-    print(query)
-    return(query)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def filtersnowbinding(Jones_Snowboards,Gnu,Lib_Tech,Salomon,Burton,Small, Medium, Large,\
-l200,l300,l400,l500,l600):
-
-    bcount = 0 # counting how many brand request forms we have
-    scount = 0 # counting how many size request forms we have
-    pcount = 0 # counting how many price request forms we have
-
-
-    brands = [Jones_Snowboards,Gnu,Lib_Tech,Salomon,Burton]
-    for i in range(0,5):
-        if brands[i] is not None:
-            bcount+= 1
-
-    sizes = [Small, Medium, Large]
-    for i in range(0,3):
-        if sizes[i] is not None:
-            scount+= 1
-
-    prices = [l200,l300,l400,l500,l600]
-    for i in range(0,4):
-        if prices[i] is not None:
-            pcount+= 1
-
-    fcount = 0 # using this to see how many brands have been placed in the query
-
-    query = "SELECT * FROM snowbinding "
-
-    if bcount or scount or pcount > 0:
-        if fcount == 0:
-            query += "WHERE "
-
-    if bcount > 0:
-        query += "(" # if there is more than one brand to be filtered
-
-    brand = ["'Jones_Snowboards'", "'Gnu'", "'Lib_Tech'", "'Salomon'", "'Burton'"]
-
-    for i in range(0,5):
-        if brands[i] is not None:
-            query += filterbrand(fcount, bcount, "brand = " + brand[i] +"")
-            fcount += 1
-
-    if bcount > 0 :
-        query += ")"
-
-
-    if bcount  >= 1: # checking if and is neccessary and brackets
-            if scount > 0:
-                query += "AND ("
-
-    gcount = 0
-
-    size = ["'Small'","'Medium'","'Large'"]
-
-    for i in range(0,3):
-        if sizes[i] is not None:
-            query += filtersize_noc(bcount, scount, gcount, "size = " + size[i] +"")
-            gcount += 1
-
-    print(query)
-
-
-    if bcount >= 1:
-        if scount >0:
-            query += ")"
-
-    kcount = 0 # counting if there has been a query
-    if pcount > 0:
-        if bcount or scount > 0:
-            query += " AND "
-
-
-    if  l600  is None:
-        if l500 is not None:
-            if kcount == 0:
-                query += "price <= 500"
-                kcount += 1
-
-    if  l600 or l500  is None:
-        if l400 is not None:
-            if kcount ==0:
-                query += "price <= 400"
-                kcount += 1
-
-
-    if  l600 or l500 or l400 is None:
-        if l300 is not None:
-            if kcount == 0:
-                query += "price <= 300"
-                kcount += 1
-
-    if  l600 or l500 or l400 or l300 is None:
-        if l200 is not None:
-            if kcount == 0:
-                query += "price <= 200"
-                kcount += 1
-
-    return(query)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# snowbaord filterr r wwawf
-
-def filtersnowbaord(Burton,Salomon,Lib_Tech,Jones_Snowboards,Gnu,blue,red,\
-orange,pink,white,black,yellow,other,one_forty,one_forty_two,one_forty_four,\
-one_forty_six,one_forty_eight,l200,l300,l400,l500,l600,g600):
-
-    bcount = 0 # counting how many brand request forms we have
-    ccount = 0 # counting how many color request forms we have
-    scount = 0 # counting how many size request forms we have
-    pcount = 0 # counting how many price request forms we have
-
-    brands = [Jones_Snowboards,Gnu,Lib_Tech,Salomon,Burton]
-    for i in range(0,5):
-        if brands[i] is not None:
-            bcount+= 1
-
-
-    colors = [blue,orange,red,pink,white,black,yellow,other]
-    for i in range(0,6):
-        if colors[i] is not None:
-            ccount+= 1
-
-    sizes = [one_forty,one_forty_two,one_forty_four,one_forty_six,one_forty_eight]
-    for i in range(0,5):
-        if sizes[i] is not None:
-            scount+= 1
-
-    prices = [l200,l300,l400,l500,l600]
-    for i in range(0,4):
-        if prices[i] is not None:
-            pcount+= 1
-
-    print(bcount)
-    print(ccount)
-    print(scount)
-    print(pcount)
-
-    # braqndssssssssssssssssssssssssssssssss
-
-    fcount = 0 # using this to see how many brands have been placed in the query
-
-    query = "SELECT * FROM snowbaord "
-
-    if bcount or ccount or scount or pcount > 0:
-        if fcount == 0:
-            query += "WHERE "
-
-    if bcount > 0:
-        query += "(" # if there is more than one brand to be filtered
-
-    brand = ["'Jones_Snowboards'", "'Gnu'", "'Lib_Tech'", "'Salomon'", "'Burton'"]
-
-    for i in range(0,5):
-        if brands[i] is not None:
-            query += filterbrand(fcount, bcount, "brand = " + brand[i] +"")
-            fcount += 1
-
-    if bcount > 0 :
-        query += ")"
-
-    # colorsssssssssssssssssssssss
-
-    lcount = 0 # counting how many color have been put into the query
-
-    if bcount >= 1:
-        if ccount > 1:
-            query += "AND (" #checks if there has been a brand and if there is more than one color
-
-    if bcount == 0:
-        if ccount >1:
-            query += "(" # if no brand but more that one color
-
-
-
-    if yellow is not None:
-        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =1) ")
-        lcount+=1
-
-    if blue is not None:
-        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =2) ")
-        lcount+=1
-
-
-    if orange is not None:
-        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =7) ")
-        lcount+=1
-
-    if pink is not None:
-        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =8) ")
-        lcount+=1
-
-
-    if other is not None:
-        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =3) ")
-        lcount+=1
-
-
-    if white is not None:
-        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =4) ")
-        lcount+=1
-
-
-    if black is not None:
-        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =5) ")
-        lcount+=1
-
-
-    if red is not None:
-        query += filtercolor(lcount, bcount, ccount,"id =(select snowbaord_id from snowbaord_colour where colour_id =6) ")
-        lcount+=1
-
-    if ccount > 1:
-        query += ")"
-
-
-    # sizesssssssssssssssssssssssssssssssss
-    gcount = 0
-
-    if bcount or ccount >= 1: # checking if and is neccessary and brackets
-            if scount > 1:
-                query += "AND ("
-
-    size = ["'140'","'142'","'144'","'146'","'148'"]
-
-    for i in range(0,5):
-        if sizes[i] is not None:
-            query += filtersize(bcount, ccount, scount, gcount, "size = " + size[i] +"")
-            gcount += 1
-
-
-
-    if bcount or ccount >= 1:
-        if scount >1:
-            query += ")"
-
-    # price
-
-    kcount = 0 # counting if there has been a query
-    if pcount > 0:
-        if bcount or ccount or scount > 0:
-            query += " AND "
-
-    if g600 is None:
-        if l600 is not None:
-            if kcount == 0:
-                query += "price <= 600"
-                kcount += 1
-
-    if g600 or l600  is None:
-        if l500 is not None:
-            if kcount == 0:
-                query += "price <= 500"
-                kcount += 1
-
-    if g600 or l600 or l500  is None:
-        if l400 is not None:
-            if kcount ==0:
-                query += "price <= 400"
-                kcount += 1
-
-
-    if g600 or l600 or l500 or l400 is None:
-        if l300 is not None:
-            if kcount == 0:
-                query += "price <= 300"
-                kcount += 1
-
-    if g600 or l600 or l500 or l400 or l300 is None:
-        if l200 is not None:
-            if kcount == 0:
-                query += "price <= 200"
-                kcount += 1
-
-
-
     return(query)

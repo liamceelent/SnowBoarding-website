@@ -164,6 +164,7 @@ cssssssssssssssssssssssssss
 .title_guide h1{
     margin: 5% 0 0 0  ;
 }
+
 .guide_directory_container{
   height: auto;
 }
@@ -175,6 +176,7 @@ cssssssssssssssssssssssssss
   background-size: cover;
   transition: 0.3s;
 }
+
 .guide_image_container_1, .guide_image_container_2, .guide_image_container_3,.guide_image_container_4, .guide_image_container_5, .guide_image_container_6{
   width: 28vw;
   border: 0.1vw solid black;
@@ -260,6 +262,7 @@ cssssssssssssssssssssssssss
 
 .strap{
   height:180%;
+
 }
 .turning{
   height:130%;
