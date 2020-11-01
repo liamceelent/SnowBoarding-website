@@ -10,32 +10,33 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'super secret key'
 app.config['SESSION_PERMANENT'] = False
 
+
 @app.route("/")
 def home():
     if "username" in session:
         loggedstat = "you are logged in as", session['username']
-        return render_template('home.html', loggedstat = loggedstat) #home page if logged in
+        return render_template('home.html', loggedstat=loggedstat)  # home page if logged in
     else:
         session['username'] = "guest"
-        return render_template('home.html') #home page if not logged in
+        return render_template('home.html')  # home page if not logged in
+
 
 @app.route("/login")
 def login():
     return render_template('login.html')
 
-@app.route("/login", methods = ['POST'])
+
+@app.route("/login", methods=['POST'])
 def create_acc():
 
     if request.method == 'POST' and "logout" in request.form:
         session['username'] = "guest"
         return redirect(url_for("home"))
 
-    if request.method == 'POST' and "create_name" in request.form: # seeing if account has been maid
+    if request.method == 'POST' and "create_name" in request.form:  # seeing if account has been maid
 
         name = request.form['create_name']
         password = request.form['create_pass']
-
-        names = database("select name from user") # ask sir about this
 
         salt = os.urandom(32)
         key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
@@ -47,24 +48,24 @@ def create_acc():
         brand.insert(2, key)
         brand = tuple(brand)
 
-        query = "INSERT INTO user(name, salt, key) VALUES(?, ?, ?)" # inserting an account
+        query = "INSERT INTO user(name, salt, key) VALUES(?, ?, ?)"  # inserting an account
 
         c = conn.cursor()
         c.execute(query, brand)
         conn.commit()
-        conn.close() # creating a account
+        conn.close()  # creating a account
         stat = "account created"
-        return render_template('login.html', stat = stat)
+        return render_template('login.html', stat=stat)
 
-    if request.method == 'POST' and "name" in request.form: # checking if login maths
+    if request.method == 'POST' and "name" in request.form:  # checking if login maths
 
         name = request.form['name']
         password = request.form['pass']
 
         conn = sqlite3.connect("snowbaord.db")
         c = conn.cursor()
-        c.execute("select salt, key from user where name = ?",(name,))
-        result = c.fetchall() # retreiving password and username for login
+        c.execute("select salt, key from user where name = ?", (name, ))
+        result = c.fetchall()  # retreiving password and username for login
         conn.close()
 
         if not result:
@@ -74,18 +75,17 @@ def create_acc():
             salt = result[0][0]
             key = result[0][1]
             new_key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-            if key == new_key: # seeing if they match
-                session["username"] = name # setting sesion username
+            if key == new_key:  # seeing if they match
+                session["username"] = name  # setting sesion username
                 return redirect(url_for("home"))
             else:
                 stat = "wrong user name mate"
                 return render_template('login.html', stat=stat)
 
-
     return render_template('login.html')
 
 
-@app.route("/gear", methods = ['POST', 'GET']) # gear page
+@app.route("/gear", methods=['POST', 'GET'])  # gear page
 def gear_page():
 
     return render_template('gear.html')
@@ -101,7 +101,7 @@ def gear_snowbinding():
 
     size_ids = database("select id, size from size")
 
-    results = filter(brands,sizes,size_ids)
+    results = filter(brands, sizes, size_ids)
 
     size_id = results[0]
     filters = results[1]
@@ -116,10 +116,10 @@ def gear_snowbinding():
     session['filters'] = filters
     session['size_id'] = size_id
 
-    return render_template('gear_snowbinding.html', filter_options = filter_options, filter = filters,key = keys)
+    return render_template('gear_snowbinding.html', filter_options=filter_options, filter=filters, key=keys)
 
 
-@app.route("/gear_snowbinding", methods = ['POST', 'GET'])
+@app.route("/gear_snowbinding", methods=['POST', 'GET'])
 def gear_snowbinding_post():
 
     queries = {
@@ -141,8 +141,7 @@ def gear_snowbinding_post():
 
     query_start = "select * from snowbinding "
 
-
-    query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
+    query = filter_post(queries, keys, type, filter_options, filters, size_id, query_start)
 
     print(query)
 
@@ -154,9 +153,10 @@ def gear_snowbinding_post():
 
     if request.method == 'POST' and "search_bar" in request.form:
         search_clothes = request.form['search_bar']
-        query_r  = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
+        query_r = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
 
     return render_template('gear_snowbinding.html', snowbinding_r = query_r, filter_options = filter_options,filter = filters,key = keys)
+
 
 @app.route("/gear_snowbaord")
 def gear_snowbaord():
@@ -167,7 +167,7 @@ def gear_snowbaord():
 
     size_ids = database("select id, size from size")
 
-    results = filter(brands,sizes,size_ids)
+    results = filter(brands, sizes, size_ids)
 
     size_id = results[0]
     filters = results[1]
@@ -182,9 +182,10 @@ def gear_snowbaord():
     session['filters'] = filters
     session['size_id'] = size_id
 
-    return render_template('gear_snowbaord.html', filter_options = filter_options, filter = filters,key = keys)
+    return render_template('gear_snowbaord.html', filter_options=filter_options, filter=filters, key=keys)
 
-@app.route("/gear_snowbaord", methods = ['POST', 'GET'])
+
+@app.route("/gear_snowbaord", methods=['POST', 'GET'])
 def gear_snowbaord_post():
 
     queries = {
@@ -206,8 +207,7 @@ def gear_snowbaord_post():
 
     query_start = "select * from snowbaord "
 
-
-    query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
+    query = filter_post(queries, keys, type, filter_options, filters, size_id, query_start)
 
     print(query)
 
@@ -219,9 +219,10 @@ def gear_snowbaord_post():
 
     if request.method == 'POST' and "search_bar" in request.form:
         search_clothes = request.form['search_bar']
-        query_r  = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
+        query_r = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
 
-    return render_template('gear_snowbaord.html', snowboard_r = query_r, filter_options = filter_options,filter = filters,key = keys)
+    return render_template('gear_snowbaord.html', snowboard_r=query_r, filter_options=filter_options, filter=filters, key=keys)
+
 
 @app.route("/gear_clothes")
 def gear_clothes():
@@ -232,7 +233,7 @@ def gear_clothes():
 
     size_ids = database("select id, size from size")
 
-    results = filter(brands,sizes,size_ids)
+    results = filter(brands, sizes, size_ids)
 
     size_id = results[0]
     filters = results[1]
@@ -247,12 +248,10 @@ def gear_clothes():
     session['filters'] = filters
     session['size_id'] = size_id
 
-    return render_template('gear_clothes.html', filter_options = filter_options, filter = filters,key = keys)
+    return render_template('gear_clothes.html', filter_options=filter_options, filter=filters, key=keys)
 
 
-
-
-@app.route("/gear_clothes", methods = ['POST'])
+@app.route("/gear_clothes", methods=['POST'])
 def gear_clothes_post():
 
     queries = {
@@ -275,7 +274,7 @@ def gear_clothes_post():
     query_start = "select * from clothes "
 
 
-    query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
+    query = filter_post(queries, keys, type, filter_options, filters, size_id, query_start)
 
     print(query)
     print(keys)
@@ -288,13 +287,14 @@ def gear_clothes_post():
 
     if request.method == 'POST' and "search_bar" in request.form:
         search_clothes = request.form['search_bar']
-        query_r  = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
+        query_r = database("select * from clothes where name LIKE '%" + search_clothes + "%'")
 
-    return render_template('gear_clothes.html', clothes_r = query_r, filter_options = filter_options,filter = filters,key = keys)
+    return render_template('gear_clothes.html', clothes_r=query_r, filter_options=filter_options, filter=filters, key=keys)
+
 
 @app.route("/gear_snow_boots")
 def gear_snow_boots():
-     # getting all the things to filter by
+    # getting all the things to filter by
 
     brands = database("select name from snowboots_brands")
 
@@ -304,7 +304,7 @@ def gear_snow_boots():
 
     # getting the size id from database
 
-    results = filter(brands,sizes,size_ids)
+    results = filter(brands, sizes, size_ids)
 
     size_id = results[0]
     filters = results[1]
@@ -319,9 +319,10 @@ def gear_snow_boots():
     session['filters'] = filters
     session['size_id'] = size_id
 
-    return render_template('gear_snow_boots.html', filter_options = filter_options, filter = filters,key = keys)
+    return render_template('gear_snow_boots.html', filter_options=filter_options, filter=filters, key=keys)
 
-@app.route("/gear_snow_boots", methods = ['POST'])
+
+@app.route("/gear_snow_boots", methods=['POST'])
 def gear_snow_boots_post():
 
     # queries between brands and sizes
@@ -345,7 +346,7 @@ def gear_snow_boots_post():
     query_start = "select * from snowboots "
 
 
-    query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
+    query = filter_post(queries, keys, type,filter_options, filters, size_id, query_start)
 
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
@@ -355,10 +356,10 @@ def gear_snow_boots_post():
 
     if request.method == 'POST' and "search_bar" in request.form:
         search_snowboots = request.form['search_bar']
-        query_r = database("select * from snowboots where name LIKE '%"+ search_snowboots +"%'")
+        query_r = database("select * from snowboots where name LIKE '%" + search_snowboots + "%'")
 
     print(query_r)
-    return render_template('gear_snow_boots.html', snowboots_r = query_r, filter_options = filter_options,filter = filters,key = keys)
+    return render_template('gear_snow_boots.html', snowboots_r=query_r, filter_options=filter_options, filter=filters, key=keys)
 
 
 @app.route("/gear_click")
@@ -368,24 +369,20 @@ def gear_click():
     table = request.args.get('table')
 
     if table == "3":
-        result = database_var("select * from snowbaord where id = ?",(search_id,)) # indivudual gear click for snowbaord
+        result = database_var("select * from snowbaord where id = ?", (search_id,))  # indivudual gear click for snowbaord
 
     if table == "4":
-        result = database_var("select * from snowbinding where id = ?",(search_id,)) # " " " "
+        result = database_var("select * from snowbinding where id = ?", (search_id,))  # " " " "
 
 
     if table == "2":
-        result = database_var("select * from snowboots where id = ?",(search_id,)) # " " " "
+        result = database_var("select * from snowboots where id = ?", (search_id,))  # " " " "
 
 
     if table == "1":
-        result = database_var("select * from clothes where id = ?",(search_id,)) # " " " " clothes
+        result = database_var("select * from clothes where id = ?", (search_id,))  # " " " "
 
-
-    return render_template('gearspec.html', name = search_id, result = result, table= table)
-
-
-
+    return render_template('gearspec.html', name=search_id, result=result, table=table)
 
 
 @app.route("/forms")
@@ -393,11 +390,12 @@ def forms():
 
     all_forms = database("select * from formpost")
 
-    personal_stat = database_var("select * from user where name =?",(session['username'],))
+    personal_stat = database_var("select * from user where name =?", (session['username'],))
 
-    return render_template('forms.html', all_forms = all_forms, stat = personal_stat)
+    return render_template('forms.html', all_forms=all_forms, stat=personal_stat)
 
-@app.route("/forms", methods = ['POST', 'GET'])
+
+@app.route("/forms", methods=['POST', 'GET'])
 def forms_post():
     content = None
     title = None
@@ -412,41 +410,39 @@ def forms_post():
         search = request.form['search_form']
 
     if title is None:
-        if content is None: # plain searching
-            result = database("select * from formpost where title LIKE '%"+ search +"%' OR post LIKE '%"+ search +"%'")
+        if content is None:  # plain searching
+            result = database("select * from formpost where title LIKE '%" + search + "%' OR post LIKE '%" + search + "%'")
 
     if title is None:
-        if content is not None: # searching content
-            result = database("select * from formpost where post LIKE '%"+ search +"%'")
+        if content is not None:  # searching content
+            result = database("select * from formpost where post LIKE '%" + search + "%'")
 
-    if title is not  None: # searching title
+    if title is not None:  # searching title
         if content is None:
-            result = database("select * from formpost where title LIKE '%"+ search +"%'")
+            result = database("select * from formpost where title LIKE '%" + search + "%'")
 
     if title is not None:
-        if content is not None: #searching both content and title
-            result = database("select * from formpost where title LIKE '%"+ search +"%' OR post LIKE '%"+ search +"%'")
+        if content is not None:  # searching both content and title
+            result = database("select * from formpost where title LIKE '%" + search + "%' OR post LIKE '%" + search + "%'")
 
-    personal_stat = database_var("select * from user where name =?",(session['username'],))
+    personal_stat = database_var("select * from user where name =?", (session['username'],))
 
+    return render_template('forms.html', user=session['username'], stat=personal_stat, all_forms=result)
 
-    return render_template('forms.html', user = session['username'], stat = personal_stat, all_forms = result)
 
 @app.route("/forms/create")
 def forms_create():
-    if session['username'] != "guest": #see if logged in
+    if session['username'] != "guest":  # see if logged in
         return render_template('create_post.html')
     else:
-        stat = "please login"
         return redirect(url_for("login"))
 
 
-@app.route("/forms/create", methods = ['POST', 'GET'])
+@app.route("/forms/create", methods=['POST', 'GET'])
 def forms_create_post():
     title = request.form['title']
     content = request.form['content']
     user = session["username"]
-
 
     conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
@@ -455,11 +451,11 @@ def forms_create_post():
     c.execute(sql, val)
     conn.commit()
 
-
     conn.close()
     stat = "post made :)"
 
-    return render_template('create_post.html',stat = stat)
+    return render_template('create_post.html', stat=stat)
+
 
 @app.route("/guide")
 def guide():
@@ -467,4 +463,4 @@ def guide():
 
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(debug=True)
