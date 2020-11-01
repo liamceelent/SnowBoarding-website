@@ -83,6 +83,8 @@ def create_acc():
 
 
     return render_template('login.html')
+
+
 @app.route("/gear", methods = ['POST', 'GET']) # gear page
 def gear_page():
 
@@ -90,19 +92,59 @@ def gear_page():
 
 
 
-@app.route("/gear_snowbinding", methods = ['POST', 'GET'])
+@app.route("/gear_snowbinding")
 def gear_snowbinding():
 
-    search_snowbinding = request.form.get('search_bar')
+    brands = database("select name from snowbinding_brands")
+
+    sizes = database("select size from size")
+
+    size_ids = database("select id, size from size")
+
+    results = filter(brands,sizes,size_ids)
+
+    size_id = results[0]
+    filters = results[1]
+    filter_options = results[2]
+    type = results[3]
+    keys = results[4]
+
+    # sending all variables over to post
+    session['keys'] = keys
+    session['type'] = type
+    session['filter_options'] = filter_options
+    session['filters'] = filters
+    session['size_id'] = size_id
+
+    return render_template('gear_snowbinding.html', filter_options = filter_options, filter = filters,key = keys)
 
 
+@app.route("/gear_snowbinding", methods = ['POST', 'GET'])
+def gear_snowbinding_post():
 
-    snowbinding_r = database("select * from snowbinding where id >= 1") # r stands for result
+    queries = {
 
-    if search_snowbinding is not None:
-        search_snowbinding = database("select * from snowbinding where name LIKE '%"+ search_snowbinding +"%'")
-        return render_template('gear_snowbinding.html', snowbinding_r = search_snowbinding)
+    "1": "brand = ",
+    "2": "id in (select snowbinding_id from snowbinding_size where size_id = "
 
+    }
+    # getting al variables
+    keys = session.get('keys')
+
+    type = session.get('type')
+
+    filter_options = session.get('filter_options')
+
+    filters = session.get('filters')
+
+    size_id = session.get('size_id')
+
+    query_start = "select * from snowbinding "
+
+
+    query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
+
+    print(query)
 
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
@@ -110,23 +152,64 @@ def gear_snowbinding():
     query_r = c.fetchall()
     conn.close()
 
-    return render_template('gear_snowbinding.html', snowbinding_r = query_r) # page load without search
+    if request.method == 'POST' and "search_bar" in request.form:
+        search_clothes = request.form['search_bar']
+        query_r  = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
 
+    return render_template('gear_snowbinding.html', snowbinding_r = query_r, filter_options = filter_options,filter = filters,key = keys)
 
-
-
-
-
-@app.route("/gear_snowbaord", methods = ['POST', 'GET'])
+@app.route("/gear_snowbaord")
 def gear_snowbaord():
 
-    search_snowboard = request.form.get('search_bar')
+    brands = database("select name from snowbaord_brands")
+
+    sizes = database("select size from size")
+
+    size_ids = database("select id, size from size")
+
+    results = filter(brands,sizes,size_ids)
+
+    size_id = results[0]
+    filters = results[1]
+    filter_options = results[2]
+    type = results[3]
+    keys = results[4]
+
+    # sending all variables over to post
+    session['keys'] = keys
+    session['type'] = type
+    session['filter_options'] = filter_options
+    session['filters'] = filters
+    session['size_id'] = size_id
+
+    return render_template('gear_snowbaord.html', filter_options = filter_options, filter = filters,key = keys)
+
+@app.route("/gear_snowbaord", methods = ['POST', 'GET'])
+def gear_snowbaord_post():
+
+    queries = {
+
+    "1": "brand = ",
+    "2": "id in (select snowbaord_id from snowbaord_size where size_id = "
+
+    }
+    # getting al variables
+    keys = session.get('keys')
+
+    type = session.get('type')
+
+    filter_options = session.get('filter_options')
+
+    filters = session.get('filters')
+
+    size_id = session.get('size_id')
+
+    query_start = "select * from snowbaord "
 
 
-    # search bar code
-    if search_snowboard is not None:
-        search_snowboard_r = database("select * from snowbaord where name LIKE '%"+ search_snowboard +"%'")
-        return render_template('gear_snowbaord.html', search_snowboard_r = search_snowboard_r)
+    query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
+
+    print(query)
 
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
@@ -134,8 +217,11 @@ def gear_snowbaord():
     query_r = c.fetchall()
     conn.close()
 
-    return render_template("gear_snowbaord.html", search_snowboard_r = query_r)
+    if request.method == 'POST' and "search_bar" in request.form:
+        search_clothes = request.form['search_bar']
+        query_r  = database("select * from clothes where name LIKE '%"+ search_clothes +"%'")
 
+    return render_template('gear_snowbaord.html', snowboard_r = query_r, filter_options = filter_options,filter = filters,key = keys)
 
 @app.route("/gear_clothes")
 def gear_clothes():
@@ -172,7 +258,7 @@ def gear_clothes_post():
     queries = {
 
     "1": "brand = ",
-    "2": "id = (select clothes_id from clothes_size where size_id = "
+    "2": "id in (select clothes_id from clothes_size where size_id = "
 
     }
     # getting al variables
@@ -192,6 +278,7 @@ def gear_clothes_post():
     query = filter_post(queries,keys,type,filter_options,filters,size_id,query_start)
 
     print(query)
+    print(keys)
 
     conn = sqlite3.connect('snowbaord.db')
     c = conn.cursor()
@@ -241,7 +328,7 @@ def gear_snow_boots_post():
     queries = {
 
     "1": "brand = ",
-    "2": "id = (select snowboot_id from snowboots_size where size_id = "
+    "2": "id in (select snowboot_id from snowboots_size where size_id = "
 
     }
     # getting al variables
@@ -359,11 +446,11 @@ def forms_create_post():
     title = request.form['title']
     content = request.form['content']
     user = session["username"]
-    time = datetime.datetime.now()
+
 
     conn = sqlite3.connect("snowbaord.db")
     c = conn.cursor()
-    sql = "INSERT INTO formpost (user, post, title, time) VALUES (?, ?, ?)"
+    sql = "INSERT INTO formpost (user, post, title) VALUES (?, ?, ?)"
     val = (session['username'], content, title)
     c.execute(sql, val)
     conn.commit()
